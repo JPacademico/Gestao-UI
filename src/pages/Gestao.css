@@ -1,0 +1,83 @@
+.intro-box{
+    margin-top: 40px;
+    padding-left: 46px;
+    height: 70px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.btn-new{
+    width: 150px;
+    height: 30px;
+    background: #00D222;
+    color: white;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+
+.btn-new:hover{
+    cursor: pointer;
+    background: green;
+}
+
+.table-box{
+    max-width: 940px;
+    width: 100%;
+    margin-right: auto;
+    margin-left: 46px;
+    
+}
+
+table{
+    margin-top: 46px;
+    width: 100%;
+    background: #b4acac2c;
+    margin-bottom: 16px;
+}
+
+table, th, td {
+    border: 1px solid #B4ACAC;
+    border-collapse: collapse;
+}
+
+
+
+td{
+    
+    border-bottom: none;
+    border-top: none;
+    padding: 10px;
+    text-align: center;
+}
+
+
+th{
+    padding: 10px;
+    text-align: left;
+}
+
+thead tr th:first-child{
+   width: 5%;
+}
+
+thead tr th:last-child{
+    width: 180px;
+ }
+
+tbody tr td:nth-child(2){
+    text-align: left;
+ }
+
+.icons-box{
+    display: flex;
+    gap: 4px;
+}
+
+button{
+    border: none;
+    cursor: pointer;
+}
+

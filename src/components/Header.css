@@ -1,0 +1,33 @@
+header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #03BCF6;
+    color: white;
+    height: 54px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.nav{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 24px;
+    margin-left: 32px;
+}
+
+.icon{
+    width: 32px;
+}
+
+.liniker{
+    text-decoration: none;
+    color: white;
+    transition: 0.3s;
+}
+
+.liniker:hover{
+    transform: scale(1.05);
+    color: black;
+}
