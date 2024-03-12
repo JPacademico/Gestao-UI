@@ -1,7 +1,6 @@
 {
   "products": [
     {
-<<<<<<< HEAD
       "name": "Produto1 ",
       "price": "129",
       "estoque": "123",
@@ -14,8 +13,6 @@
       "price": "12313",
       "estoque": "123",
       "estoqueMin": "123131",
-=======
->>>>>>> 5c3bfddb37170149a93d1f2cbf532bda4e1d0d8e
       "id": "2",
       "status": "sended"
     },
@@ -28,7 +25,6 @@
       "status": "sended"
     },
     {
-<<<<<<< HEAD
       "name": "Produto 4",
       "price": "13",
       "estoque": "10",
@@ -42,7 +38,7 @@
       "price": 25.99,
       "estoque": 90,
       "estoqueMin": 30,
-      "status": "notSended"
+      "status": "sended"
     },
     {
       "id": "6",
@@ -51,41 +47,6 @@
       "estoque": 90,
       "estoqueMin": 30,
       "status": "notSended"
-=======
-      "id": "29",
-      "name": "Produto 29",
-      "price": 23.99,
-      "estoque": 130,
-      "estoqueMin": 26
-    },
-    {
-      "name": "aaaaaaaaa",
-      "price": "121221",
-      "estoque": "aaaa",
-      "estoqueMin": "aaaaaaaaaaaaaa",
-      "id": "30"
-    },
-    {
-      "id": "31",
-      "name": "Produto 31",
-      "price": 20.49,
-      "estoque": 105,
-      "estoqueMin": 21
-    },
-    {
-      "id": "32",
-      "name": "Produto 32",
-      "price": 9.99,
-      "estoque": 60,
-      "estoqueMin": 12
-    },
-    {
-      "id": "33",
-      "name": "Produto 33",
-      "price": 16.99,
-      "estoque": 110,
-      "estoqueMin": 22
->>>>>>> 5c3bfddb37170149a93d1f2cbf532bda4e1d0d8e
     }
   ]
 }
