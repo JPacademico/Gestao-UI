@@ -18,6 +18,10 @@ import { useSearchParams } from "react-router-dom";
 import EmailModal from "../components/EmailModal";
 import axios from "axios";
 
+async function doBench(idproduto,nome) {
+  let response = await axios.get(`https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`);
+  console.log(response.data)
+}
 
 function Gestao() {
   const [list, setList] = useState();
@@ -56,12 +60,11 @@ function Gestao() {
 
   const createNewProduct = useCallback(
     async ({ name, price, estoque, estoqueMin }) => {
-      await api.post("/products", {
-        name,
-        price,
-        estoque: estoque,
-        estoqueMin: estoqueMin,
-        status: false
+      await axios.post("https://localhost:7286/api/Produtos", {
+        descricao: name,
+        preco:price,
+        estoqueAtual: estoque,
+        estoqueMinimo: estoqueMin,
       });
 
       getData();
@@ -116,16 +119,16 @@ function Gestao() {
             {list &&
               list.map((product) => {
                 return (
-                  <tr key={product.id}>
-                    <td>{product.id}</td>
-                    <td>{product.name}</td>
-                    <td>{price.format(product.price)}</td>
-                    <td>{product.estoque}</td>
-                    <td>{product.estoqueMin}</td>
+                  <tr key={product.idProduto}>
+                    <td>{product.idProduto}</td>
+                    <td>{product.descricao}</td>
+                    <td>{price.format(product.preco)}</td>
+                    <td>{product.estoqueAtual}</td>
+                    <td>{product.estoqueMinimo}</td>
                     <td>
                       <div className="icons-box">
                         <button>
-                          <img src={Run} alt="Iniciar Benchmarking" />
+                          <img src={Run} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
                         </button>
 
                         <button
