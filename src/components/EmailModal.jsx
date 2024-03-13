@@ -24,7 +24,7 @@ function EmailModal({ toggleModalStatus, getProducts }) {
 
   const changeStatus = useCallback(async (id) => {
     await api.patch(`/products/${id}`, {
-      status: "sended",
+      status: true,
     });
 
     await getProducts();

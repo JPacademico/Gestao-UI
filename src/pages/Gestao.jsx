@@ -16,6 +16,7 @@ import api from "../lib/api";
 import { price } from "../utils/priceFormater";
 import { useSearchParams } from "react-router-dom";
 import EmailModal from "../components/EmailModal";
+import axios from "axios";
 
 
 function Gestao() {
@@ -44,12 +45,12 @@ function Gestao() {
   };
 
   const handleDeleteProduct = useCallback(async (id) => {
-    await api.delete(`/products/${id}`);
+    await axios.delete(`https://localhost:7286/api/Produtos/${id}`);
     setList((state) => state.filter((product) => product.id != id));
   }, []);
 
   const getData = useCallback(async () => {
-    const response = await api.get("/products");
+    const response = await axios.get("https://localhost:7286/api/Produtos");
     setList(response.data);
   }, [list]);
 
@@ -60,7 +61,7 @@ function Gestao() {
         price,
         estoque: estoque,
         estoqueMin: estoqueMin,
-        status: 'notSended'
+        status: false
       });
 
       getData();
@@ -132,10 +133,10 @@ function Gestao() {
                             toggleEmailModal();
                             setURLId(product.id);
                           }}
-                          disabled={product.status !== "notSended"}
+                          disabled={product.status !== false}
                           className="sendButton"
                         >
-                          {product.status === "notSended" ? (
+                          {product.status === false ? (
                             <img src={Message} alt="Enviar Email" />
                           ) : (
                             <img src={DisabledMessage} alt="Enviar Email" />

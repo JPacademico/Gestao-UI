@@ -6,7 +6,7 @@
       "estoque": "123",
       "estoqueMin": "10",
       "id": "1",
-      "status": "sended"
+      "status": true
     },
     {
       "name": "3123",
@@ -14,7 +14,7 @@
       "estoque": "123",
       "estoqueMin": "123131",
       "id": "2",
-      "status": "sended"
+      "status": true
     },
     {
       "id": "3",
@@ -22,7 +22,7 @@
       "price": 20.49,
       "estoque": 120,
       "estoqueMin": 25,
-      "status": "sended"
+      "status": false
     },
     {
       "name": "Produto 4",
@@ -30,7 +30,7 @@
       "estoque": "10",
       "estoqueMin": "1",
       "id": "4",
-      "status": "sended"
+      "status": false
     },
     {
       "id": "5",
@@ -38,15 +38,7 @@
       "price": 25.99,
       "estoque": 90,
       "estoqueMin": 30,
-      "status": "sended"
-    },
-    {
-      "id": "6",
-      "name": "Produto 6",
-      "price": 27.99,
-      "estoque": 90,
-      "estoqueMin": 30,
-      "status": "notSended"
+      "status": false
     }
   ]
 }
