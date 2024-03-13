@@ -6,6 +6,8 @@ import Xicon from "../assets/xis.svg";
 import Edit from "../assets/edit.svg";
 import Message from "../assets/message.svg";
 import DisabledMessage from "../assets/disabledMessage.svg";
+import lampadaAzul from "../assets/bluelamp.svg"
+import lampadaVermelha from "../assets/redlamp.svg"
 
 import Run from "../assets/run.svg";
 import Modal from "../components/EditProductModal";
@@ -18,17 +20,21 @@ import { useSearchParams } from "react-router-dom";
 import EmailModal from "../components/EmailModal";
 import axios from "axios";
 
-async function doBench(idproduto,nome) {
-  let response = await axios.get(`https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`);
-  console.log(response.data)
-}
+
 
 function Gestao() {
   const [list, setList] = useState();
   const [modalIsOpen, setModalOpen] = useState(false);
   const [emailModalIsOpen, setEmailModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [benchStatus, setBenchStatus] = useState(null)
 
+
+  async function doBench(idproduto,nome) {
+    let response = await axios.get(`https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`);
+    console.log(response.data)
+    setBenchStatus(true)
+  }
 
   const toggleModal = () => {
     setModalOpen(modalIsOpen === true ? false : true);
@@ -51,6 +57,7 @@ function Gestao() {
   const handleDeleteProduct = useCallback(async (id) => {
     await axios.delete(`https://localhost:7286/api/Produtos/${id}`);
     setList((state) => state.filter((product) => product.id != id));
+    getData();
   }, []);
 
   const getData = useCallback(async () => {
@@ -62,7 +69,7 @@ function Gestao() {
     async ({ name, price, estoque, estoqueMin }) => {
       await axios.post("https://localhost:7286/api/Produtos", {
         descricao: name,
-        preco:price,
+        preco: price,
         estoqueAtual: estoque,
         estoqueMinimo: estoqueMin,
       });
@@ -114,6 +121,13 @@ function Gestao() {
               getProducts={getData}
             ></EmailModal>
           </Dialog.Root>
+
+          <Dialog.Root open={emailModalIsOpen} onOpenChange={setEmailModalOpen}>
+            <EmailModal
+              toggleModalStatus={toggleEmailModal}
+              getProducts={getData}
+            ></EmailModal>
+          </Dialog.Root>
           
           <tbody>
             {list &&
@@ -128,18 +142,27 @@ function Gestao() {
                     <td>
                       <div className="icons-box">
                         <button>
-                          <img src={Run} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
+                          {benchStatus[product.idProduto] === null ? (
+                            <img src={Run} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
+                          ) : benchStatus[product.idProduto] === true ? (
+                            <img src={lampadaAzul} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
+                          ) : benchStatus[product.idProduto] === false &&(
+                            <img src={lampadaVermelha} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
+                          )
+                          }
+                          
+
                         </button>
 
                         <button
                           onClick={() => {
                             toggleEmailModal();
-                            setURLId(product.id);
+                            setURLId(product.idProduto);
                           }}
-                          disabled={product.status !== false}
+                          disabled={benchStatus !== true}
                           className="sendButton"
                         >
-                          {product.status === false ? (
+                          {benchStatus === true ? (
                             <img src={Message} alt="Enviar Email" />
                           ) : (
                             <img src={DisabledMessage} alt="Enviar Email" />
@@ -148,14 +171,14 @@ function Gestao() {
 
                         <button
                           onClick={() => {
-                            setURLId(product.id);
+                            setURLId(product.idProduto);
                             toggleModal();
                           }}
                         >
                           <img src={Edit} alt="Editar" />
                         </button>
 
-                        <button onClick={() => handleDeleteProduct(product.id)}>
+                        <button onClick={() => handleDeleteProduct(product.idProduto)}>
                           <img src={Xicon} alt="Apagar" />
                         </button>
                       </div>
