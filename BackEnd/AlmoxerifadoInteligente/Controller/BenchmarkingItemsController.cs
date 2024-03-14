@@ -32,14 +32,14 @@ namespace AlmoxerifadoInteligente.API
         }
 
         // GET: api/BenchmarkingItems/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<BenchmarkingItem>> GetBenchmarkingItem(int id)
+        [HttpGet("{idProduto}")]
+        public async Task<ActionResult<BenchmarkingItem>> GetBenchmarkingItem(int idProduto)
         {
             if (_context.BenchmarkingItem == null)
             {
                 return NotFound();
             }
-            var benchmarkingItem = await _context.BenchmarkingItems.Include(x => x.IdProdutoNavigation).FirstOrDefaultAsync(x => x.Id == id);
+            var benchmarkingItem = await _context.BenchmarkingItems.Include(x => x.IdProdutoNavigation).FirstOrDefaultAsync(x => x.IdProduto == idProduto);
 
             if (benchmarkingItem == null)
             {
