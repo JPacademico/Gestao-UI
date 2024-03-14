@@ -36,8 +36,6 @@ namespace AlmoxerifadoInteligente.Models
             {
                 entity.ToTable("BenchmarkingItem");
 
-                entity.HasIndex(e => e.IdProdutoNavigationIdProduto, "IX_BenchmarkingItem_IdProdutoNavigationIdProduto");
-
                 entity.Property(e => e.Economia).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.PrecoLoja1).HasColumnType("decimal(18, 2)");
@@ -48,9 +46,7 @@ namespace AlmoxerifadoInteligente.Models
                      .HasColumnType("nvarchar(max)")
                      .IsRequired(false); 
 
-                entity.HasOne(d => d.IdProdutoNavigationIdProdutoNavigation)
-                    .WithMany(p => p.BenchmarkingItems)
-                    .HasForeignKey(d => d.IdProdutoNavigationIdProduto);
+               
             });
 
             modelBuilder.Entity<Log>(entity =>

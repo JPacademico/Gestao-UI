@@ -14,26 +14,21 @@ namespace RaspagemMagMer.Operations
         public static string[] CompareValue(string descricaoProduto, int idProduto)
         {
             string[] data = new string[4];
-            
+            char[] charRemove = { 'R', '$', ' ' };
+
             try
             {
 
-                MercadoLivreScraper mercadoLivreScraper = new();
+                MercadoLivreScraper mercadoLivre = new();
+                mercadoLivre.ObterData(descricaoProduto, idProduto);
 
-                string mercadoLivrePreco = mercadoLivreScraper.ObterPreco(descricaoProduto, idProduto);
-                string mercadoLivreNome = mercadoLivreScraper.ObterNome(descricaoProduto);
-                string mercadoLivreLink = mercadoLivreScraper.ObterLink(descricaoProduto);
+                MagazineScraper magazineLuiza = new();
+                magazineLuiza.ObterData(descricaoProduto,idProduto);
 
-                MagazineScraper magazineLuizaScraper = new();
+               
 
-                string magazineLuizaPreco = magazineLuizaScraper.ObterPreco(descricaoProduto, idProduto);
-                string magazineLuizaNome = magazineLuizaScraper.ObterNome(descricaoProduto);
-                string magazineLuizaLink = magazineLuizaScraper.ObterLink(descricaoProduto);
-
-                char[] charRemove = { 'R', '$', ' ' };
-
-                decimal mercadoPreco = Convert.ToDecimal(mercadoLivrePreco.Trim(charRemove));
-                decimal magazinePreco = Convert.ToDecimal(magazineLuizaPreco.Trim(charRemove));
+                decimal mercadoPreco = Convert.ToDecimal(mercadoLivre.Preco.Trim(charRemove));
+                decimal magazinePreco = Convert.ToDecimal(magazineLuiza.Preco.Trim(charRemove));
 
                 if (magazinePreco > mercadoPreco)
 
@@ -41,11 +36,11 @@ namespace RaspagemMagMer.Operations
                     decimal result = EconomiaOperation(magazinePreco, mercadoPreco);
                    
                     data[0] = Convert.ToString(result);
-                    data[1] = mercadoLivreNome;
-                    data[2] = mercadoLivreLink;
-                    data[3] = mercadoLivrePreco;
+                    data[1] = mercadoLivre.Nome;
+                    data[2] = mercadoLivre.Link;
+                    data[3] = mercadoLivre.Preco;
 
-                    BenchRegister.RegistrarBench(mercadoLivreNome, magazineLuizaNome, mercadoLivreLink,magazineLuizaLink,mercadoPreco, magazinePreco, result, idProduto);
+                    BenchRegister.RegistrarBench(mercadoLivre.Nome, magazineLuiza.Nome, mercadoLivre.Link, magazineLuiza.Link, mercadoPreco, magazinePreco, result, idProduto);
 
                     LogRegister.RegistrarLog(DateTime.Now, "Benchmarking", "Sucesso", idProduto);
 
@@ -57,11 +52,11 @@ namespace RaspagemMagMer.Operations
                 {
                     decimal result = EconomiaOperation(mercadoPreco, magazinePreco);
                     data[0] = Convert.ToString(result);
-                    data[1] = magazineLuizaNome;
-                    data[2] = magazineLuizaLink;
-                    data[3] = magazineLuizaPreco;
+                    data[1] = magazineLuiza.Nome;
+                    data[2] = magazineLuiza.Link;
+                    data[3] = magazineLuiza.Preco;
 
-                    BenchRegister.RegistrarBench(mercadoLivreNome, magazineLuizaNome, mercadoLivreLink, magazineLuizaLink, mercadoPreco, magazinePreco, result, idProduto);
+                    BenchRegister.RegistrarBench(mercadoLivre.Nome, magazineLuiza.Nome, mercadoLivre.Link, magazineLuiza.Link, mercadoPreco, magazinePreco, result, idProduto);
 
                     LogRegister.RegistrarLog(DateTime.Now, "Benchmarking", "Sucesso", idProduto);
 

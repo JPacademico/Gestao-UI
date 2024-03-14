@@ -24,7 +24,7 @@ namespace RaspagemMagMer.Operations
                     parameters.Add("contact_phone_number", phoneNumber); 
                     parameters.Add("message_custom_id", "teste");
                     parameters.Add("message_type", "text");
-                parameters.Add("message_body",
+                    parameters.Add("message_body",
                                "*Resultado da Comparação de Preços*" +
                                "\n" +
                                $"*Produto Pesquisado*: {nomeProduto}\n" +

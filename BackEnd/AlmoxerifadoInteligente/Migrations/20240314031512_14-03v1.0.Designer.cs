@@ -4,6 +4,7 @@ using AlmoxerifadoInteligente.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlmoxerifadoInteligente.Migrations
 {
     [DbContext(typeof(AlmoxarifadoDBContext))]
-    partial class AlmoxarifadoDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240314031512_14-03v1.0")]
+    partial class _1403v10
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

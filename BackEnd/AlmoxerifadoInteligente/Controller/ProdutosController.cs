@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using AlmoxerifadoInteligente.Models;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace AlmoxerifadoInteligente.Controller
 {
@@ -19,6 +15,7 @@ namespace AlmoxerifadoInteligente.Controller
         {
             _context = context;
         }
+
 
         // GET: api/Produtos
         [HttpGet]
@@ -113,6 +110,48 @@ namespace AlmoxerifadoInteligente.Controller
             await _context.SaveChangesAsync();
 
             return NoContent();
+        }
+
+        // PATCH: api/Produtos/5
+        [HttpPatch("{id}")]
+        public async Task<ActionResult<Produto>> UpdateProduto(int id, [FromBody] Produto produtoPatch)
+        {
+            var produto = await _context.Produtos.FindAsync(id);
+
+            if (produto == null)
+            {
+                return NotFound();
+            }
+
+            if (produtoPatch.Descricao != null)
+            {
+                produto.Descricao = produtoPatch.Descricao;
+            }
+
+            if (produtoPatch.Preco.HasValue)
+            {
+                produto.Preco = produtoPatch.Preco.Value;
+            }
+
+            if (produtoPatch.EstoqueAtual.HasValue)
+            {
+                produto.EstoqueAtual = produtoPatch.EstoqueAtual.Value;
+            }
+
+            if (produtoPatch.EstoqueMinimo.HasValue)
+            {
+                produto.EstoqueMinimo = produtoPatch.EstoqueMinimo.Value;
+            }
+            
+            if(produtoPatch.Status.HasValue)
+            {
+                produto.Status = produtoPatch.Status;
+            }
+
+            _context.Entry(produto).State = EntityState.Modified;
+            var updatedProduto = await _context.SaveChangesAsync();
+
+            return Ok(updatedProduto);
         }
 
         private bool ProdutoExists(int id)

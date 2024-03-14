@@ -4,6 +4,7 @@ using AlmoxerifadoInteligente.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlmoxerifadoInteligente.Migrations
 {
     [DbContext(typeof(AlmoxarifadoDBContext))]
-    partial class AlmoxarifadoDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240314004235_13-03")]
+    partial class _1303
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -66,7 +68,7 @@ namespace AlmoxerifadoInteligente.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("IdProdutoNavigationIdProduto");
+                    b.HasIndex(new[] { "IdProdutoNavigationIdProduto" }, "IX_BenchmarkingItem_IdProdutoNavigationIdProduto");
 
                     b.ToTable("BenchmarkingItem", (string)null);
                 });
@@ -145,9 +147,6 @@ namespace AlmoxerifadoInteligente.Migrations
                         .HasColumnType("decimal(20,2)")
                         .HasColumnName("preco");
 
-                    b.Property<bool?>("Status")
-                        .HasColumnType("bit");
-
                     b.HasKey("IdProduto")
                         .HasName("PK__Produtos__BA38A6B801B4C2DA");
 
@@ -156,11 +155,16 @@ namespace AlmoxerifadoInteligente.Migrations
 
             modelBuilder.Entity("AlmoxerifadoInteligente.Models.BenchmarkingItem", b =>
                 {
-                    b.HasOne("AlmoxerifadoInteligente.Models.Produto", "IdProdutoNavigation")
-                        .WithMany()
+                    b.HasOne("AlmoxerifadoInteligente.Models.Produto", "IdProdutoNavigationIdProdutoNavigation")
+                        .WithMany("BenchmarkingItems")
                         .HasForeignKey("IdProdutoNavigationIdProduto");
 
-                    b.Navigation("IdProdutoNavigation");
+                    b.Navigation("IdProdutoNavigationIdProdutoNavigation");
+                });
+
+            modelBuilder.Entity("AlmoxerifadoInteligente.Models.Produto", b =>
+                {
+                    b.Navigation("BenchmarkingItems");
                 });
 #pragma warning restore 612, 618
         }

@@ -15,8 +15,6 @@ namespace AlmoxerifadoInteligente.Models
         public decimal Economia { get; set; }
         public string Email { get; set; } = null!;
         public int IdProduto { get; set; }
-        public int? IdProdutoNavigationIdProduto { get; set; }
-
-        public virtual Produto? IdProdutoNavigationIdProdutoNavigation { get; set; }
+        public virtual Produto? IdProdutoNavigation { get; set; }
     }
 }
