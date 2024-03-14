@@ -19,33 +19,60 @@ import { price } from "../utils/priceFormater";
 import { useSearchParams } from "react-router-dom";
 import EmailModal from "../components/EmailModal";
 import axios from "axios";
+import BenchModal from "../components/BenchModal";
 
 
 
 function Gestao() {
   const [list, setList] = useState();
   const [modalIsOpen, setModalOpen] = useState(false);
+  const [infoModalIsOpen, setInfoModalOpen] = useState(false);
   const [emailModalIsOpen, setEmailModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [benchStatus, setBenchStatus] = useState(null)
 
 
   async function doBench(idproduto,nome) {
-    let response = await axios.get(`https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`);
-    console.log(response.data)
-    if (response.data !== null) {
-      changePrice(response.data[3], idproduto)
-      changeStatus(true, idproduto)
-    } else {
+    try {
+      let response = await axios.get(`https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`);
+
+      if (response.data !== null) {
+        changePrice(response.data[3], idproduto)
+        changeStatus(true, idproduto)
+      } else {
+        changeStatus(false, idproduto)
+      }
+    } catch (error) {
       changeStatus(false, idproduto)
     }
+    
+  }
+
+  async function getInfo(idProduto) {
+    let response = await axios.get(`https://localhost:7286/api/BenchmarkingItems/${idProduto}`)
+    let mensagem = "uhu"
+
+    let precoMag = response.data.precoLoja2;
+    let precoMer = response.data.precoLoja1;
+    let economia = response.data.economia;
+    let linkMag = response.data.linkLoja2;
+    let linkMer = response.data.linkLoja1;
+
+    if (precoMag > precoMer) {
+       mensagem = `O preço do produto está melhor na Mercado Livre, pois está R$ ${economia} mais barato.\n Link para produto no Mercado Livre: ${linkMer}`
+    } else if (precoMer > precoMag) {
+        mensagem = `O preço do produto está melhor na Magazine Luiza, pois está R$ ${economia} mais barato.\n Link para produto no Magazine Luiza: ${linkMag}`
+    } else {
+      mensagem = "Os valores são equivalentes."
+    }
+    console.log(mensagem);
   }
 
   async function changePrice(price, idProduto){
     let response = await axios.patch(`https://localhost:7286/api/Produtos/${idProduto}`, {
     preco: price,
   });
-    console.log("CHANGEPRICE: "+response.data)
+
     getData();
   }
 
@@ -55,7 +82,7 @@ function Gestao() {
     
   });
     getData();
-    console.log("CHANGESTATUS: "+response.data)
+
   }
 
   const toggleModal = () => {
@@ -65,6 +92,12 @@ function Gestao() {
   const toggleEmailModal = () => {
     setEmailModalOpen(emailModalIsOpen === true ? false : true);
   };
+
+  const toggleInfoModal = () => {
+    setInfoModalOpen(infoModalIsOpen === true ? false : true);
+  };
+
+
 
   const setURLId = (id) => {
     setSearchParams((state) => {
@@ -100,6 +133,7 @@ function Gestao() {
       getData();
     }
   );
+
 
   useEffect(() => {
     getData();
@@ -145,12 +179,13 @@ function Gestao() {
             ></EmailModal>
           </Dialog.Root>
 
-          {/* <Dialog.Root open={emailModalIsOpen} onOpenChange={setEmailModalOpen}>
-            <EmailModal
-              toggleModalStatus={toggleEmailModal}
+          <Dialog.Root open={infoModalIsOpen} onOpenChange={setInfoModalOpen}>
+            <BenchModal
+              getInfo={getInfo}
+              toggleModalStatus={toggleInfoModal}
               getProducts={getData}
-            ></EmailModal>
-          </Dialog.Root> */}
+            ></BenchModal>
+          </Dialog.Root>
           
           <tbody>
             {list &&
@@ -163,12 +198,12 @@ function Gestao() {
                     <td>{product.estoqueAtual}</td>
                     <td>{product.estoqueMinimo}</td>
                     <td>
-                      <div className="icons-box">
+                      <div className="icons-box" >
                         <button>
                           {product.status == null ? (
                             <img src={Run} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
                           ) : product.status == true ? (
-                            <img src={lampadaAzul} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
+                            <img src={lampadaAzul} onClick={() => {toggleInfoModal(); setURLId(product.idProduto);}} alt="Iniciar Benchmarking" />
                           ) : product.status == false &&(
                             <img src={lampadaVermelha} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
                           )

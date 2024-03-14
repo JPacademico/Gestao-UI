@@ -43,7 +43,7 @@ function EmailModal({ toggleModalStatus, getProducts }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
+    
     setLoading(true)
     setTimeout(() => {
       toggleModalStatus();

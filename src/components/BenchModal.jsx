@@ -1,38 +1,46 @@
 import { Link } from "react-router-dom";
 import * as Dialog from "@radix-ui/react-dialog";
 import Close from "../assets/close.svg";
+import { useSearchParams } from "react-router-dom";
+import { useCallback } from "react";
 
 import "./Edit.css";
 import { useState } from "react";
+import axios from "axios";
 
-function BenchModal({ createNewModal }) {
-  const [nameProduto, setName] = useState();
-  const [estoque, setEstoque] = useState();
-  const [estoqueMin, setMinStorage] = useState();
+function BenchModal({getInfo}) {
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const id = searchParams.get("id");
+  
+  const changeStatus = useCallback(async (id) => {
 
-    createNewModal({ name, price:0, estoque, estoqueMin});
+    await getInfo();
 
-    setName("");
-    setEstoque("");
-    setMinStorage("");
-  };
+    setSearchParams((state) => {
+      if (id) {
+        state.delete("id");
+      }
+      return state;
+    });
+  });
+  
+  getInfo(id)
 
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="DialogOverlay" />
       <Dialog.Content className="DialogContent">
         <Dialog.Close asChild>
-          <button className="IconButton" aria-label="Close">
+          <button className="IconButton" aria-label="Close" onClick={()=>changeStatus}>
             <img className="close" src={Close} alt="" />
           </button>
         </Dialog.Close>
-        <Dialog.Title className="DialogTitle">Adicionar Produto</Dialog.Title>
+        <Dialog.Title className="DialogTitle">Resultado do Benchmarking</Dialog.Title>
         <Dialog.Description className="DialogDescription">
-          Preencha os campos com o novo produto e clique em "Adicionar"
+        
         </Dialog.Description>
+        
         
       </Dialog.Content>
     </Dialog.Portal>
