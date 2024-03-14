@@ -33,7 +33,29 @@ function Gestao() {
   async function doBench(idproduto,nome) {
     let response = await axios.get(`https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`);
     console.log(response.data)
-    setBenchStatus(true)
+    if (response.data !== null) {
+      changePrice(response.data[3], idproduto)
+      changeStatus(true, idproduto)
+    } else {
+      changeStatus(false, idproduto)
+    }
+  }
+
+  async function changePrice(price, idProduto){
+    let response = await axios.patch(`https://localhost:7286/api/Produtos/${idProduto}`, {
+    preco: price,
+  });
+    console.log("CHANGEPRICE: "+response.data)
+    getData();
+  }
+
+  async function changeStatus(status, idProduto){
+    let response = await axios.patch(`https://localhost:7286/api/Produtos/${idProduto}`, {
+    status: status,
+    
+  });
+    getData();
+    console.log("CHANGESTATUS: "+response.data)
   }
 
   const toggleModal = () => {
@@ -63,6 +85,7 @@ function Gestao() {
   const getData = useCallback(async () => {
     const response = await axios.get("https://localhost:7286/api/Produtos");
     setList(response.data);
+    console.log(list);
   }, [list]);
 
   const createNewProduct = useCallback(
@@ -122,12 +145,12 @@ function Gestao() {
             ></EmailModal>
           </Dialog.Root>
 
-          <Dialog.Root open={emailModalIsOpen} onOpenChange={setEmailModalOpen}>
+          {/* <Dialog.Root open={emailModalIsOpen} onOpenChange={setEmailModalOpen}>
             <EmailModal
               toggleModalStatus={toggleEmailModal}
               getProducts={getData}
             ></EmailModal>
-          </Dialog.Root>
+          </Dialog.Root> */}
           
           <tbody>
             {list &&
@@ -142,11 +165,11 @@ function Gestao() {
                     <td>
                       <div className="icons-box">
                         <button>
-                          {benchStatus[product.idProduto] === null ? (
+                          {product.status == null ? (
                             <img src={Run} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
-                          ) : benchStatus[product.idProduto] === true ? (
+                          ) : product.status == true ? (
                             <img src={lampadaAzul} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
-                          ) : benchStatus[product.idProduto] === false &&(
+                          ) : product.status == false &&(
                             <img src={lampadaVermelha} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
                           )
                           }
@@ -159,10 +182,11 @@ function Gestao() {
                             toggleEmailModal();
                             setURLId(product.idProduto);
                           }}
-                          disabled={benchStatus !== true}
+                          disabled={product.status !== true}
                           className="sendButton"
+
                         >
-                          {benchStatus === true ? (
+                          {product.status === true ? (
                             <img src={Message} alt="Enviar Email" />
                           ) : (
                             <img src={DisabledMessage} alt="Enviar Email" />

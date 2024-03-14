@@ -11,9 +11,10 @@ namespace RaspagemMagMer.Operations
 {
     public class Benchmarking
     {
-        public static string[] CompareValue(string descricaoProduto, int idProduto)
+       
+        public static List<object> CompareValue(string descricaoProduto, int idProduto)
         {
-            string[] data = new string[4];
+            List<object> data = new List<object>();
             char[] charRemove = { 'R', '$', ' ' };
 
             try
@@ -25,7 +26,6 @@ namespace RaspagemMagMer.Operations
                 MagazineScraper magazineLuiza = new();
                 magazineLuiza.ObterData(descricaoProduto,idProduto);
 
-               
 
                 decimal mercadoPreco = Convert.ToDecimal(mercadoLivre.Preco.Trim(charRemove));
                 decimal magazinePreco = Convert.ToDecimal(magazineLuiza.Preco.Trim(charRemove));
@@ -35,10 +35,10 @@ namespace RaspagemMagMer.Operations
                 {
                     decimal result = EconomiaOperation(magazinePreco, mercadoPreco);
                    
-                    data[0] = Convert.ToString(result);
-                    data[1] = mercadoLivre.Nome;
-                    data[2] = mercadoLivre.Link;
-                    data[3] = mercadoLivre.Preco;
+                    data.Add(Convert.ToString(result));
+                    data.Add(mercadoLivre.Nome);
+                    data.Add(mercadoLivre.Link);
+                    data.Add(mercadoPreco);
 
                     BenchRegister.RegistrarBench(mercadoLivre.Nome, magazineLuiza.Nome, mercadoLivre.Link, magazineLuiza.Link, mercadoPreco, magazinePreco, result, idProduto);
 
@@ -51,10 +51,10 @@ namespace RaspagemMagMer.Operations
                 else if (magazinePreco < mercadoPreco)
                 {
                     decimal result = EconomiaOperation(mercadoPreco, magazinePreco);
-                    data[0] = Convert.ToString(result);
-                    data[1] = magazineLuiza.Nome;
-                    data[2] = magazineLuiza.Link;
-                    data[3] = magazineLuiza.Preco;
+                    data.Add(Convert.ToString(result));
+                    data.Add(magazineLuiza.Nome);
+                    data.Add(magazineLuiza.Link);
+                    data.Add(magazinePreco);
 
                     BenchRegister.RegistrarBench(mercadoLivre.Nome, magazineLuiza.Nome, mercadoLivre.Link, magazineLuiza.Link, mercadoPreco, magazinePreco, result, idProduto);
 
@@ -71,8 +71,8 @@ namespace RaspagemMagMer.Operations
             catch (Exception ex)
             {
                 LogRegister.RegistrarLog(DateTime.Now, "Benchmarking", "Erro", idProduto);
-                string[] erro = new string[1];
-                erro[0] = ex.Message;
+                List<object> erro = new List<object>();
+                erro.Add(ex.Message);
                 Console.WriteLine(erro[0]);
                 if (ex.InnerException != null)
                 {

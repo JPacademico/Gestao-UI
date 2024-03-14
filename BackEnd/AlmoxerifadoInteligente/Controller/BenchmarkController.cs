@@ -10,10 +10,10 @@ namespace SuaAplicacao.Controllers
     {
         [HttpGet]
         [Route("compare")]
-        public ActionResult<string[]> ComparePreco(string descricaoProduto, int idProd)
+        public ActionResult<List<object>> ComparePreco(string descricaoProduto, int idProd)
         {
             // Chama a função de comparação de preços da classe Benchmarking
-            string[] resultadoComparacao = Benchmarking.CompareValue(descricaoProduto,idProd);
+            List<object> resultadoComparacao = Benchmarking.CompareValue(descricaoProduto,idProd);
 
             // Retorna o resultado da comparação
             return resultadoComparacao;

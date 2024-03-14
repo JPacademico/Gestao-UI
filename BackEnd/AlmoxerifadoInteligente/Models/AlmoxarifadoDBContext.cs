@@ -26,7 +26,7 @@ namespace AlmoxerifadoInteligente.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=PC03LAB2533\\SENAI;Database=AlmoxarifadoDB;User Id=sa;Password=senai.123;");
+                optionsBuilder.UseSqlServer("Server=PC03LAB2539\\SENAI;Database=AlmoxarifadoDB;User Id=sa;Password=senai.123;");
             }
         }
 

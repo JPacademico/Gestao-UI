@@ -4,6 +4,7 @@ import Close from "../assets/close.svg";
 
 import "./Edit.css";
 import { useCallback, useState } from "react";
+import axios from "axios";
 import api from "../lib/api";
 
 
@@ -15,17 +16,15 @@ function EmailModal({ toggleModalStatus, getProducts }) {
 
   const id = searchParams.get("id");
 
-  const sendEmail = useCallback(async ({ email }) => {
-    // await api.put(`/email/${email}`, {
-    //     email
-    // }
+  const sendEmail = useCallback(async () => {
+    console.log(email);
+    let response = await axios.post(`https://localhost:7286/api/Email/enviar?destinatario=${email}&idProduto=${id}`)
+
+    console.log(response.data)
     
   });
 
   const changeStatus = useCallback(async (id) => {
-    await api.patch(`/products/${id}`, {
-      status: true,
-    });
 
     await getProducts();
 
@@ -37,16 +36,14 @@ function EmailModal({ toggleModalStatus, getProducts }) {
     });
   });
 
+  const changeEmail =  (e) => {
+    console.log(e.target.value)
+    setEmail(e.target.value)
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    try {
-      sendEmail({ email });
-      changeStatus(id);
-    } catch (error) {
-      console.log("Erick tomou gaia");
-    }
 
-    setEmail("");
     setLoading(true)
     setTimeout(() => {
       toggleModalStatus();
@@ -79,8 +76,7 @@ function EmailModal({ toggleModalStatus, getProducts }) {
             required
             className="Input"
             id="email"
-            onChange={(e) => setEmail(e.target.value)}
-            value={email}
+            onChange={(e) => changeEmail(e)}
           />
 
           <div
@@ -90,7 +86,7 @@ function EmailModal({ toggleModalStatus, getProducts }) {
               justifyContent: "flex-end",
             }}
           >
-            {!loading && <button type="submit" className="Button green">
+            {!loading && <button type="submit" className="Button green" onClick={() => sendEmail()}>
               Enviar
             </button>}
 
