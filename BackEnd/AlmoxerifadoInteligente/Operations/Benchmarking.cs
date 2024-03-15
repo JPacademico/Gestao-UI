@@ -46,10 +46,7 @@ namespace RaspagemMagMer.Operations
                 
                 decimal magazinePreco = ConvertToBRL.StringToDecimal(magazineLuiza.Preco);
                 
-                if (!decimal.TryParse(magazineLuiza.Preco.Trim(charRemove), result: out magazinePreco))
-                {
-                    throw new FormatException("Formato de preço da Magazine Luiza inválido.");
-                }
+              
 
                 decimal result = (magazinePreco > mercadoPreco) ? EconomiaOperation(magazinePreco, mercadoPreco) :
                                     (magazinePreco < mercadoPreco) ? EconomiaOperation(mercadoPreco, magazinePreco) :
