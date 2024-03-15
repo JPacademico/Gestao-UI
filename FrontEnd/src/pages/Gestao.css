@@ -24,15 +24,17 @@
 }
 
 .table-box{
-    max-width: 940px;
-    width: 100%;
+    width: 80%;
     margin-right: auto;
     margin-left: 46px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     
 }
 
 table{
-    margin-top: 46px;
+    margin-top: 30px;
     width: 100%;
     background: #b4acac2c;
     margin-bottom: 16px;

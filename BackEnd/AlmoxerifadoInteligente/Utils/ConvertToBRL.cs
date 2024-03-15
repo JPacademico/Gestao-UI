@@ -8,7 +8,7 @@ namespace AlmoxerifadoInteligente.Utils
         {
             CultureInfo cultureInfo = new CultureInfo("pt-BR");
 
-            string cleanedPrice = price.Replace("R$","");
+            string cleanedPrice = price.Replace("R$","").Trim();
 
             decimal result = decimal.Parse(cleanedPrice, NumberStyles.Currency ,cultureInfo);
 
