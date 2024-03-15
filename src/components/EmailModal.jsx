@@ -62,11 +62,11 @@ function EmailModal({ toggleModalStatus, getProducts }) {
     setEmail(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     setLoading(true);
-    sendEmail();
+    await sendEmail();
+    await changeEmailStatus(id)
   };
 
   return (

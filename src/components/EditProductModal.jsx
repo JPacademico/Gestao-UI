@@ -1,56 +1,65 @@
 import { useSearchParams } from "react-router-dom";
 import * as Dialog from "@radix-ui/react-dialog";
 import Close from '../assets/close.svg'
-
+import axios from "axios";
 import "./Edit.css";
 import { useCallback, useState } from "react";
 import api from "../lib/api";
+import { useEffect } from "react";
 
 function Edit({  toggleModalStatus, getProducts}) {
-  const [name, setName] = useState()
-  const [price, setPrice] = useState()
+  const [status, setStatus] = useState();
+  const [name, setName] = useState();
   const [estoque, setEstoque] = useState()
   const [estoqueMin, setEstoqueMin] = useState()
-  const [searchParams, setSearchParams] = useSearchParams()
-
+  const [searchParams, setSearchParams] = useSearchParams() 
+  
   const id = searchParams.get('id')
+  
+  const getData = useCallback(async () => {
+    const response = await axios.get(`https://localhost:7286/api/Produtos/${id}`);
+    setStatus(response.data.status);
+  }, [id]);
 
-  const editProduct = useCallback(async(id, {name, price, estoque, estoqueMin}) => {
-    await api.put(`/products/${id}`, {
-      name,
-      price: 0,
-      estoque,
-      estoqueMin
-    })
+  const editProduct = async (id,{name=null,estoque,estoqueMin}) => {
+    const response = await axios.patch(`https://localhost:7286/api/Produtos/${id}`,{
+      
+      descricao:name,
+      estoqueAtual:estoque,
+      estoqueMinimo:estoqueMin,
     
-    getProducts()
-    setSearchParams(state => {
-      if(id){
-        state.delete('id')
-      }
-      return state
-    })
-  })
+    });
+    console.log(response.data)
+  }
   
-  
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    editProduct(id, { name, price, estoque, estoqueMin});
-
-    setName("");
+    await editProduct(id, { name, estoque, estoqueMin});
+    
+    setName(null);
     setEstoque("");
-    setPrice("");
     setEstoqueMin("");
-
     toggleModalStatus()
+    getProducts()
   };
+
+  useEffect(() => 
+  {
+    console.log(id)
+    getData()
+  }, [getProducts,id]);
 
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="DialogOverlay" />
       <Dialog.Content className="DialogContent">
         <Dialog.Close asChild>
-          <button className="IconButton" aria-label="Close">
+          <button className="IconButton" aria-label="Close" onClick={()=>{
+            if (id) {
+            const newSearchParams = new URLSearchParams(searchParams);
+            newSearchParams.delete('id');
+            setSearchParams(newSearchParams);
+            }}}>
             <img className="close" src={Close} alt="" />
           </button>
         </Dialog.Close>
@@ -63,11 +72,11 @@ function Edit({  toggleModalStatus, getProducts}) {
             Descrição
           </label>
           <input
+            disabled={ status && status === true}
             type="text"
             required
             className="Input"
             id="name"
-            defaultValue=""
             onChange={(e) => setName(e.target.value)}
             value={name}
           />
@@ -80,7 +89,6 @@ function Edit({  toggleModalStatus, getProducts}) {
             required
             type="text"
             id="storage"
-            defaultValue=""
             onChange={(e) => setEstoque(e.target.value)}
             value={estoque}
           />
@@ -93,7 +101,6 @@ function Edit({  toggleModalStatus, getProducts}) {
             required
             type="text"
             id="min-storage"
-            defaultValue=""
             onChange={(e) => setEstoqueMin(e.target.value)}
             value={estoqueMin}
           />

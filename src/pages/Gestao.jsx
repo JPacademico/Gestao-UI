@@ -6,8 +6,8 @@ import Xicon from "../assets/xis.svg";
 import Edit from "../assets/edit.svg";
 import Message from "../assets/message.svg";
 import DisabledMessage from "../assets/disabledMessage.svg";
-import lampadaAzul from "../assets/bluelamp.svg"
-import lampadaVermelha from "../assets/redlamp.svg"
+import lampadaAzul from "../assets/bluelamp.svg";
+import lampadaVermelha from "../assets/redlamp.svg";
 
 import Run from "../assets/run.svg";
 import Modal from "../components/EditProductModal";
@@ -21,15 +21,12 @@ import EmailModal from "../components/EmailModal";
 import axios from "axios";
 import BenchModal from "../components/BenchModal";
 
-
-
 function Gestao() {
   const [list, setList] = useState();
   const [modalIsOpen, setModalOpen] = useState(false);
   const [infoModalIsOpen, setInfoModalOpen] = useState(false);
   const [emailModalIsOpen, setEmailModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
-  const [benchStatus, setBenchStatus] = useState(null)
 
   async function changeEmailStatus(id) {
     try {
@@ -39,33 +36,37 @@ function Gestao() {
     } catch (error) {
       console.error("Erro ao alterar o status do produto:", error);
     }
-  
   }
 
   async function doBench(idproduto, nome) {
     try {
-      let response = await axios.get(`https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`);
-      console.log(response.data)
+      let response = await axios.get(
+        `https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`
+      );
+      console.log(response.data);
       if (response.data !== null) {
         await Promise.all([
-          await changeStatusPrice(true, response.data[3] , idproduto),
+          await changeStatusPrice(true, response.data[3], idproduto),
           await changeEmailStatus(idproduto),
         ]);
       } else {
-        await changeStatus(false, 0 , idproduto);
+        await changeStatus(false, 0, idproduto);
       }
       getData();
     } catch (error) {
       console.error("Erro ao executar o benchmarking:", error);
     }
   }
-  
-  async function changeStatusPrice(status,price ,idProduto) {
+
+  async function changeStatusPrice(status, price, idProduto) {
     try {
-      let response = await axios.patch(`https://localhost:7286/api/Produtos/${idProduto}`, {
-        preco: price,
-        status: status
-      });
+      let response = await axios.patch(
+        `https://localhost:7286/api/Produtos/${idProduto}`,
+        {
+          preco: price,
+          status: status,
+        }
+      );
       console.log("CHANGE: " + response.data);
     } catch (error) {
       console.error("Erro ao alterar o status do produto:", error);
@@ -73,8 +74,10 @@ function Gestao() {
   }
 
   async function getBench(idProduto) {
-    let response = await axios.get(`https://localhost:7286/api/BenchmarkingItems/${idProduto}`)
-    let mensagem = "uhu"
+    let response = await axios.get(
+      `https://localhost:7286/api/BenchmarkingItems/${idProduto}`
+    );
+    let mensagem = "uhu";
 
     let precoMag = response.data.precoLoja2;
     let precoMer = response.data.precoLoja1;
@@ -83,13 +86,12 @@ function Gestao() {
     let linkMer = response.data.linkLoja1;
 
     if (precoMag > precoMer) {
-      mensagem = `O preço do produto está melhor na Mercado Livre, pois está R$ ${economia} mais barato.\n Link para produto no Mercado Livre: ${linkMer}`
+      mensagem = `O preço do produto está melhor na Mercado Livre, pois está R$ ${economia} mais barato.\n Link para produto no Mercado Livre: ${linkMer}`;
     } else if (precoMer > precoMag) {
-      mensagem = `O preço do produto está melhor na Magazine Luiza, pois está R$ ${economia} mais barato.\n Link para produto no Magazine Luiza: ${linkMag}`
+      mensagem = `O preço do produto está melhor na Magazine Luiza, pois está R$ ${economia} mais barato.\n Link para produto no Magazine Luiza: ${linkMag}`;
     } else {
-      mensagem = "Os valores são equivalentes."
+      mensagem = "Os valores são equivalentes.";
     }
-    console.log(mensagem);
     return mensagem;
   }
 
@@ -125,7 +127,7 @@ function Gestao() {
     const response = await axios.get("https://localhost:7286/api/Produtos");
     setList(response.data);
   }, [list]);
-  
+
   const createNewProduct = useCallback(
     async ({ name, price, estoque, estoqueMin }) => {
       await axios.post("https://localhost:7286/api/Produtos", {
@@ -190,7 +192,7 @@ function Gestao() {
               getProducts={getData}
             ></BenchModal>
           </Dialog.Root>
-          
+
           <tbody>
             {list &&
               list.map((product) => {
@@ -202,18 +204,34 @@ function Gestao() {
                     <td>{product.estoqueAtual}</td>
                     <td>{product.estoqueMinimo}</td>
                     <td>
-                      <div className="icons-box" >
+                      <div className="icons-box">
                         <button>
                           {product.status == null ? (
-                            <img src={Run} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
+                            <img
+                              src={Run}
+                              onClick={() =>
+                                doBench(product.idProduto, product.descricao)
+                              }
+                              alt="Iniciar Benchmarking"
+                            />
                           ) : product.status === true ? (
-                            <img src={lampadaAzul} onClick={() => {toggleInfoModal(); setURLId(product.idProduto);}} alt="Iniciar Benchmarking" />
+                            <img
+                              src={lampadaAzul}
+                              onClick={() => {
+                                toggleInfoModal();
+                                setURLId(product.idProduto);
+                              }}
+                              alt="Iniciar Benchmarking"
+                            />
                           ) : (
-                            <img src={lampadaVermelha} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
-                          )
-                          }
-                          
-
+                            <img
+                              src={lampadaVermelha}
+                              onClick={() =>
+                                doBench(product.idProduto, product.descricao)
+                              }
+                              alt="Iniciar Benchmarking"
+                            />
+                          )}
                         </button>
 
                         <button
@@ -221,11 +239,18 @@ function Gestao() {
                             toggleEmailModal();
                             setURLId(product.idProduto);
                           }}
-                          disabled={product.status !== true || product.emailStatus !== true}
-                          className="sendButton"
+                          disabled={
+                            product.status !== true 
+                            
+                            &&
 
+                            product.emailStatus !== true
+                          }
+                          className="sendButton"
                         >
-                          {product.status === true && product.emailStatus === true? (
+                          {product.status === true 
+                          &&
+                          product.emailStatus === true ? (
                             <img src={Message} alt="Enviar Email" />
                           ) : (
                             <img src={DisabledMessage} alt="Enviar Email" />
@@ -241,7 +266,9 @@ function Gestao() {
                           <img src={Edit} alt="Editar" />
                         </button>
 
-                        <button onClick={() => handleDeleteProduct(product.idProduto)}>
+                        <button
+                          onClick={() => handleDeleteProduct(product.idProduto)}
+                        >
                           <img src={Xicon} alt="Apagar" />
                         </button>
                       </div>

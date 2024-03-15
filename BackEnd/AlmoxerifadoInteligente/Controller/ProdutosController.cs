@@ -147,7 +147,7 @@ namespace AlmoxerifadoInteligente.Controller
             {
                 produto.Status = produtoPatch.Status;
             }
-            if (produtoPatch.EmailStatus != null)
+            if (produtoPatch.EmailStatus.HasValue)
             {
                 produto.EmailStatus = produtoPatch.EmailStatus;
             }

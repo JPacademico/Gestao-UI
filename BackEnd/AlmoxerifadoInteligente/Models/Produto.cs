@@ -12,7 +12,7 @@ namespace AlmoxerifadoInteligente.Models
         public int? EstoqueAtual { get; set; }
         public int? EstoqueMinimo { get; set; }
         public bool? Status { get;set; }
-        public bool EmailStatus { get; set; } = default;
+        public bool? EmailStatus { get; set; } = default;
 
     }
 }
