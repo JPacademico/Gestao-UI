@@ -7,7 +7,7 @@ import { useCallback, useState } from "react";
 import api from "../lib/api";
 import { useEffect } from "react";
 
-function Edit({  toggleModalStatus, getProducts}) {
+function Edit({ toggleModalStatus, getProducts}) {
   const [status, setStatus] = useState();
   const [name, setName] = useState();
   const [estoque, setEstoque] = useState()

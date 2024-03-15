@@ -39,41 +39,41 @@ namespace RaspagemMagMer.Operations
                 MagazineScraper magazineLuiza = new(_logRegister);
                 magazineLuiza.ObterData(descricaoProduto, idProduto);
 
-                if (!decimal.TryParse(mercadoLivre.Preco.Trim(charRemove), out decimal mercadoPreco))
+                if ((mercadoLivre.Preco != null) && (magazineLuiza.Preco != null))
                 {
-                    throw new FormatException("Formato de preço do Mercado Livre inválido.");
+                    if (!decimal.TryParse(mercadoLivre.Preco.Trim(charRemove), out decimal mercadoPreco))
+                    {
+                        throw new FormatException("Formato de preço do Mercado Livre inválido.");
+                    }
+
+                    decimal magazinePreco = ConvertToBRL.StringToDecimal(magazineLuiza.Preco);
+                    decimal result = (magazinePreco > mercadoPreco) ? EconomiaOperation(magazinePreco, mercadoPreco) :
+                                        (magazinePreco < mercadoPreco) ? EconomiaOperation(mercadoPreco, magazinePreco) :
+                                        0;
+
+                    data.Add(Convert.ToString(result));
+                    data.Add((magazinePreco > mercadoPreco) ? mercadoLivre.Nome : magazineLuiza.Nome);
+                    data.Add((magazinePreco > mercadoPreco) ? mercadoLivre.Link : magazineLuiza.Link);
+                    data.Add((magazinePreco > mercadoPreco) ? mercadoPreco : magazinePreco);
+
+                    _bench.RegistrarBench(mercadoLivre.Nome, magazineLuiza.Nome, mercadoLivre.Link, magazineLuiza.Link, mercadoPreco, magazinePreco, result, idProduto);
+
+                    _logRegister.RegistrarLog(DateTime.Now, "Benchmarking", "Sucesso", idProduto);
+
+                    try
+                    {
+                        var log = new InsertLogDTO(1806, "LRJevs", descricaoProduto, Convert.ToDouble(mercadoPreco), Convert.ToDouble(magazinePreco), Convert.ToDouble(result));
+                        await log.InsertAsync();
+                        _logRegister.RegistrarLog(DateTime.Now, "DTO", "Sucesso", idProduto);
+                        Console.WriteLine("Informações enviadas com sucesso.");
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Ocorreu um erro ao enviar as informações: {ex.Message}");
+                    }
+
+                    return data;
                 }
-                
-                decimal magazinePreco = ConvertToBRL.StringToDecimal(magazineLuiza.Preco);
-                
-              
-
-                decimal result = (magazinePreco > mercadoPreco) ? EconomiaOperation(magazinePreco, mercadoPreco) :
-                                    (magazinePreco < mercadoPreco) ? EconomiaOperation(mercadoPreco, magazinePreco) :
-                                    0;
-
-                data.Add(Convert.ToString(result));
-                data.Add((magazinePreco > mercadoPreco) ? mercadoLivre.Nome : magazineLuiza.Nome);
-                data.Add((magazinePreco > mercadoPreco) ? mercadoLivre.Link : magazineLuiza.Link);
-                data.Add((magazinePreco > mercadoPreco) ? mercadoPreco : magazinePreco);
-
-                _bench.RegistrarBench(mercadoLivre.Nome, magazineLuiza.Nome, mercadoLivre.Link, magazineLuiza.Link, mercadoPreco, magazinePreco, result, idProduto);
-
-                _logRegister.RegistrarLog(DateTime.Now, "Benchmarking", "Sucesso", idProduto);
-
-                try
-                {
-                    var log = new InsertLogDTO(1806, "LRJevs", descricaoProduto, Convert.ToDouble(mercadoPreco), Convert.ToDouble(magazinePreco), Convert.ToDouble(result));
-                    await log.InsertAsync();
-                    _logRegister.RegistrarLog(DateTime.Now, "DTO", "Sucesso", idProduto);
-                    Console.WriteLine("Informações enviadas com sucesso.");
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Ocorreu um erro ao enviar as informações: {ex.Message}");
-                }
-
-                return data;
             }
             catch (Exception ex)
             {
@@ -90,6 +90,12 @@ namespace RaspagemMagMer.Operations
                 }
                 return erro;
             }
+
+
+            return null;
+        
+
+                
         }
 
 

@@ -38,7 +38,14 @@
     padding: 8px;
     border-radius: 5px;
     font-weight: bold;
+}
 
+.red {
+    background-color: rgb(211, 69, 69);
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+    font-weight: bold;
 }
 
 form {

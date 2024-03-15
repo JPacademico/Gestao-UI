@@ -20,18 +20,20 @@ import { useSearchParams } from "react-router-dom";
 import EmailModal from "../components/EmailModal";
 import axios from "axios";
 import BenchModal from "../components/BenchModal";
+import Delete from "../components/DeleteModal";
 
 function Gestao() {
   const [list, setList] = useState();
   const [modalIsOpen, setModalOpen] = useState(false);
   const [infoModalIsOpen, setInfoModalOpen] = useState(false);
   const [emailModalIsOpen, setEmailModalOpen] = useState(false);
+  const [deleteModalIsOpen, setDeleteModalOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  async function changeEmailStatus(id) {
+  async function changeEmailStatus(status,id) {
     try {
       await axios.patch(`https://localhost:7286/api/Produtos/${id}`, {
-        emailStatus: true,
+        emailStatus: status,
       });
     } catch (error) {
       console.error("Erro ao alterar o status do produto:", error);
@@ -43,18 +45,26 @@ function Gestao() {
       let response = await axios.get(
         `https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`
       );
-      console.log(response.data);
-      if (response.data !== null) {
+      console.log("Tamanho: "+response.data.length);
+      if (response.data !== null && response.data.length > 0) {
         await Promise.all([
           await changeStatusPrice(true, response.data[3], idproduto),
-          await changeEmailStatus(idproduto),
+          await changeEmailStatus(true,idproduto),
+          console.log(response.data)
         ]);
-      } else {
-        await changeStatus(false, 0, idproduto);
+      } else if(response.data=""){
+        console.log(ola)
+      }
+      
+      else {
+        await changeEmailStatus(false,idproduto),
+        await changeStatusPrice(false, 0, idproduto);
       }
       getData();
     } catch (error) {
       console.error("Erro ao executar o benchmarking:", error);
+      await changeStatusPrice(false, 0, idproduto);
+      await changeEmailStatus(false,idproduto)
     }
   }
 
@@ -74,25 +84,32 @@ function Gestao() {
   }
 
   async function getBench(idProduto) {
-    let response = await axios.get(
-      `https://localhost:7286/api/BenchmarkingItems/${idProduto}`
-    );
-    let mensagem = "uhu";
-
-    let precoMag = response.data.precoLoja2;
-    let precoMer = response.data.precoLoja1;
-    let economia = response.data.economia;
-    let linkMag = response.data.linkLoja2;
-    let linkMer = response.data.linkLoja1;
-
-    if (precoMag > precoMer) {
-      mensagem = `O preço do produto está melhor na Mercado Livre, pois está R$ ${economia} mais barato.\n Link para produto no Mercado Livre: ${linkMer}`;
-    } else if (precoMer > precoMag) {
-      mensagem = `O preço do produto está melhor na Magazine Luiza, pois está R$ ${economia} mais barato.\n Link para produto no Magazine Luiza: ${linkMag}`;
-    } else {
-      mensagem = "Os valores são equivalentes.";
+    try {
+      let response = await axios.get(
+        `https://localhost:7286/api/BenchmarkingItems/${idProduto}`
+      );
+      let mensagem = "uhu";
+      if(response){
+        let precoMag = response.data.precoLoja2;
+        let precoMer = response.data.precoLoja1;
+        let economia = response.data.economia;
+        let linkMag = response.data.linkLoja2;
+        let linkMer = response.data.linkLoja1;
+  
+        if (precoMag > precoMer) {
+          mensagem = `O preço do produto está melhor na Mercado Livre, pois está R$ ${economia} mais barato.\n Link para produto no Mercado Livre: ${linkMer}`;
+        } else if (precoMer > precoMag) {
+          mensagem = `O preço do produto está melhor na Magazine Luiza, pois está R$ ${economia} mais barato.\n Link para produto no Magazine Luiza: ${linkMag}`;
+        } else {
+          mensagem = "Os valores são equivalentes.";
+        }
+        return mensagem;
+      }
+      
+    } catch (error) {
+      console.log("Erro: "+ error)
     }
-    return mensagem;
+    
   }
 
   const toggleModal = () => {
@@ -105,6 +122,10 @@ function Gestao() {
 
   const toggleInfoModal = () => {
     setInfoModalOpen(!infoModalIsOpen);
+  };
+
+  const toggleDeleteModal = () => {
+    setDeleteModalOpen(!deleteModalIsOpen);
   };
 
 
@@ -123,11 +144,7 @@ function Gestao() {
     });
   };
 
-  const handleDeleteProduct = useCallback(async (id) => {
-    await axios.delete(`https://localhost:7286/api/Produtos/${id}`);
-    setList((state) => state.filter((product) => product.id != id));
-    getData();
-  }, []);
+  
 
   const getData = useCallback(async () => {
     const response = await axios.get("https://localhost:7286/api/Produtos");
@@ -202,6 +219,13 @@ function Gestao() {
             ></BenchModal>
           </Dialog.Root>
 
+          <Dialog.Root open={deleteModalIsOpen} onOpenChange={setDeleteModalOpen}>
+            <Delete
+              toggleModalStatus={toggleDeleteModal}
+              getProducts={getData}
+            ></Delete>
+          </Dialog.Root>
+
           <tbody>
             {list &&
               list.map((product) => {
@@ -229,6 +253,7 @@ function Gestao() {
                               onClick={() => {
                                 toggleInfoModal();
                                 setURLId(product.idProduto);
+
                               }}
                               alt="Iniciar Benchmarking"
                             />
@@ -268,14 +293,19 @@ function Gestao() {
                         </button>
 
                         <button
-                          onClick={() => handleOnClickEdit(product)}
-                        >
+                          onClick={() => {
+                            setURLId(product.idProduto);
+                            toggleModal();}
+                          }>
                           <img src={Edit} alt="Editar" />
                         </button>
 
                         <button
-                          onClick={() => handleDeleteProduct(product.idProduto)}
-                        >
+                          onClick={() => 
+                            {
+                              setURLId(product.idProduto);
+                              toggleDeleteModal()
+                            }}>
                           <img src={Xicon} alt="Apagar" />
                         </button>
                       </div>
