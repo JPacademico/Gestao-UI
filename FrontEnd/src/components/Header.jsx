@@ -9,7 +9,7 @@ function Header() {
         <header>
             <div className='nav'>
                 <Link to="/" className='liniker'>Produto</Link>
-                <Link to="/" className='liniker'>Requisição</Link>
+                <a href="https://almoxarifado-tau.vercel.app/" target='_blank' className='liniker'>Requisição</a>
                 <Link to="/" className='liniker'>BenchMarking Log</Link>
                 <Link to="/" className='liniker'>Configurações</Link>
             </div>

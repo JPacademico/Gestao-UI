@@ -47,7 +47,7 @@ function Edit({  toggleModalStatus, getProducts}) {
   {
     console.log(id)
     getData()
-  }, [getProducts,id]);
+  }, []);
 
   return (
     <Dialog.Portal>

@@ -96,16 +96,22 @@ function Gestao() {
   }
 
   const toggleModal = () => {
-    setModalOpen(modalIsOpen === true ? false : true);
+    setModalOpen(!modalIsOpen);
   };
 
   const toggleEmailModal = () => {
-    setEmailModalOpen(emailModalIsOpen === true ? false : true);
+    setEmailModalOpen(!emailModalIsOpen);
   };
 
   const toggleInfoModal = () => {
-    setInfoModalOpen(infoModalIsOpen === true ? false : true);
+    setInfoModalOpen(!infoModalIsOpen);
   };
+
+
+  const handleOnClickEdit = (product) => {
+    setURLId(product.idProduto);
+    toggleModal();
+  }
 
   const setURLId = (id) => {
     setSearchParams((state) => {
@@ -170,13 +176,16 @@ function Gestao() {
               <th>Opções</th>
             </tr>
           </thead>
+          {
 
+              modalIsOpen &&
           <Dialog.Root open={modalIsOpen} onOpenChange={setModalOpen}>
             <Modal
               toggleModalStatus={toggleModal}
               getProducts={getData}
             ></Modal>
           </Dialog.Root>
+                   }
 
           <Dialog.Root open={emailModalIsOpen} onOpenChange={setEmailModalOpen}>
             <EmailModal
@@ -236,8 +245,9 @@ function Gestao() {
 
                         <button
                           onClick={() => {
-                            toggleEmailModal();
                             setURLId(product.idProduto);
+                            toggleEmailModal();
+                            
                           }}
                           disabled={
                             product.status !== true 
@@ -258,10 +268,7 @@ function Gestao() {
                         </button>
 
                         <button
-                          onClick={() => {
-                            setURLId(product.idProduto);
-                            toggleModal();
-                          }}
+                          onClick={() => handleOnClickEdit(product)}
                         >
                           <img src={Edit} alt="Editar" />
                         </button>
