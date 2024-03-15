@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data.SqlTypes;
+using System.Security.Policy;
 using System.Threading;
 using AlmoxerifadoInteligente.Models;
 using AlmoxerifadoInteligente.Operations.Register;
@@ -20,55 +22,53 @@ namespace AlmoxerifadoInteligente.API.Scraps
         public MagazineScraper(LogRegister logRegister)
         {
             _logRegister = logRegister;
-            _chromeOptions = new ChromeOptions();
-            _chromeOptions.AddArgument("--headless");
-            _chromeOptions.AddArgument("--disable-gpu");
-            _chromeOptions.AddArgument("--disable-dev-shm-usage");
-            _chromeOptions.AddArgument("--no-sandbox");
-            _chromeOptions.AddArgument("--silent");
-            _chromeOptions.AddArgument("--log-level=3");
-        }
-
-        private IWebDriver InitializeDriver()
-        {
-            return new ChromeDriver(_chromeOptions);
         }
 
         public void ObterData(string descricaoProduto, int idProduto)
         {
-            
+            string url = $"https://www.magazineluiza.com.br/busca/{descricaoProduto.Replace(' ', '+')}";
+
             try
             {
-                using (IWebDriver driver = InitializeDriver())
+                using (HttpClient client = new HttpClient())
                 {
-                    string url = $"https://www.magazineluiza.com.br/busca/{descricaoProduto.Replace(' ', '+')}";
-                    driver.Navigate().GoToUrl(url);
-                    Thread.Sleep(5000);
-
-                    IWebElement priceElement = driver.FindElement(By.CssSelector("[data-testid='price-value']"));
-                    IWebElement nameElement = driver.FindElement(By.CssSelector("[data-testid='product-title']"));
-
-                    if (priceElement != null)
+                    HttpResponseMessage response = client.GetAsync(url).Result;
+                    if (response.IsSuccessStatusCode)
                     {
-                        string firstProductPrice = priceElement.Text;
-                        string firstProductName = nameElement.Text;
-                        
-                        Preco = firstProductPrice;
-                        Nome = firstProductName;
-                        Link = url;
-                        
-                        _logRegister.RegistrarLog(DateTime.Now, "WebScraping - Magazine Luiza", "Sucesso", idProduto);
-                        Console.WriteLine("Preco Magalu: " + firstProductPrice + "\n");
-                        Console.WriteLine("Nome Magalu: " + nameElement.Text + "\n");
-                    }
-                    else
-                    {
-                        Console.WriteLine("Preço não encontrado.");
+                        string content = response.Content.ReadAsStringAsync().Result;
 
-                        _logRegister.RegistrarLog(DateTime.Now, "WebScraping - Magazine Luiza", "Preço não encontrado", idProduto);
+                        var docHtml = new HtmlDocument();
+
+                        docHtml.LoadHtml(content);
+
+                        var produtos = docHtml.DocumentNode.SelectNodes("//a");
+
+                        foreach (var item in produtos)
+                        {
+                            if (item.OuterHtml.Contains("data-testid=\"product-card-container\""))
+                            {
+
+                                var card = item;
+                                var nodePriceValue = card.SelectSingleNode(".//p[@data-testid=\"price-value\"]");
+                                var nodeNameValue = card.SelectSingleNode(".//h2[@data-testid=\"product-title\"]");
+                                Link = url;
+                                Nome = "oi";
+                                Preco = nodePriceValue.InnerText.Trim().Replace("&nbsp;", ""); ;
+                                Console.WriteLine("Nome Magalu: "+Nome);
+                                Console.WriteLine("Preco Magalu: "+Preco);
+                                Console.WriteLine("Link Magalu: " + Link);
+                                return;
+                            }
+                            
+                        }
 
                     }
+
+
                 }
+
+            
+                
             }
             catch (Exception ex)
             {
