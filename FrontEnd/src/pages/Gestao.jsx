@@ -32,7 +32,7 @@ function Gestao() {
 
   async function changeEmailStatus(status,id) {
     try {
-      await axios.patch(`https://localhost:7286/api/Produtos/${id}`, {
+      await axios.patch(`https://localhost:8020/api/Produtos/${id}`, {
         emailStatus: status,
       });
     } catch (error) {
@@ -43,7 +43,7 @@ function Gestao() {
   async function doBench(idproduto, nome) {
     try {
       let response = await axios.get(
-        `https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`
+        `https://localhost:8020/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`
       );
       console.log("Tamanho: "+response.data.length);
       if (response.data !== null && response.data.length > 0) {
@@ -71,7 +71,7 @@ function Gestao() {
   async function changeStatusPrice(status, price, idProduto) {
     try {
       let response = await axios.patch(
-        `https://localhost:7286/api/Produtos/${idProduto}`,
+        `https://localhost:8020/api/Produtos/${idProduto}`,
         {
           preco: price,
           status: status,
@@ -86,7 +86,7 @@ function Gestao() {
   async function getBench(idProduto) {
     try {
       let response = await axios.get(
-        `https://localhost:7286/api/BenchmarkingItems/${idProduto}`
+        `https://localhost:8020/api/BenchmarkingItems/${idProduto}`
       );
       let mensagem = "uhu";
       if(response){
@@ -147,13 +147,13 @@ function Gestao() {
   
 
   const getData = useCallback(async () => {
-    const response = await axios.get("https://localhost:7286/api/Produtos");
+    const response = await axios.get("https://localhost:8020/api/Produtos");
     setList(response.data);
   }, [list]);
 
   const createNewProduct = useCallback(
     async ({ name, price, estoque, estoqueMin }) => {
-      await axios.post("https://localhost:7286/api/Produtos", {
+      await axios.post("https://localhost:8020/api/Produtos", {
         descricao: name,
         preco: price,
         estoqueAtual: estoque,
