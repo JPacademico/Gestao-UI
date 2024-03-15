@@ -1,6 +1,6 @@
-﻿using HtmlAgilityPack;
+﻿using AlmoxerifadoInteligente.Operations.Register;
+using HtmlAgilityPack;
 using OpenQA.Selenium;
-using RaspagemMagMer.Operations;
 using System.Drawing;
 using System.Security.Policy;
 
@@ -21,10 +21,16 @@ namespace RaspagemMagMer.Scraps
             Preco = preco;
         }
 
+        private readonly LogRegister _logRegister;
+
+        public MercadoLivreScraper(LogRegister logRegister)
+        {
+            _logRegister = logRegister;
+        }
         public void ObterData(string descricaoProduto, int idProduto)
         {
 
-            string url = $"https://lista.mercadolivre.com.br/{descricaoProduto}";
+            string url = $"https://lista.mercadolivre.com.br/{descricaoProduto.Replace(' ', '+')}";
 
             try
             {
@@ -42,23 +48,25 @@ namespace RaspagemMagMer.Scraps
                     Nome = firstProductNameNode.InnerText.Trim();
                     Link = url;
 
-                    LogRegister.RegistrarLog(DateTime.Now, "WebScraping - Mercado Livre", "Sucesso", idProduto);
+                    _logRegister.RegistrarLog(DateTime.Now, "WebScraping - Mercado Livre", "Sucesso", idProduto);
                     Console.Write("Preço Mercado: " + Preco + "\n");
 
                 }
                 else
                 {
-                    Console.WriteLine("Preço não encontrado.");
+                    Console.WriteLine("Item não encontrado no Mercado Livre.");
 
-                    LogRegister.RegistrarLog(DateTime.Now, "WebScraping - Mercado Livre", "Preço não encontrado", idProduto);
-
+                    _logRegister.RegistrarLog(DateTime.Now, "WebScraping - Mercado Livre", "Preço não encontrado", idProduto);
+                    Preco = null;
+                    Nome = "";
+                    Link = url;
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine($"Erro ao acessar a página: {ex.Message}");
 
-                LogRegister.RegistrarLog(DateTime.Now, "Web Scraping - Mercado Livre", $"Erro: {ex.Message}", idProduto);
+                _logRegister.RegistrarLog(DateTime.Now, "Web Scraping - Mercado Livre", $"Erro: {ex.Message}", idProduto);
 
             }
         }

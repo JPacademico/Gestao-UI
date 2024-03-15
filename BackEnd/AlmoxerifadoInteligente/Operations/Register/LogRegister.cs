@@ -5,17 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RaspagemMagMer.Operations
+namespace AlmoxerifadoInteligente.Operations.Register
 {
     public class LogRegister
     {
+        private readonly AlmoxarifadoDBContext _context;
+
+        public LogRegister(AlmoxarifadoDBContext context)
+        {
+            _context = context;
+        }
         public static string CodRobo { get; set; } = "1806";
 
         public static string UsuRob { get; set; } = "rafaelMecenas";
 
-        public static void RegistrarLog(DateTime dateLog, string processo, string infLog, int idProd)
+        public void RegistrarLog(DateTime dateLog, string processo, string infLog, int idProd)
         {
-            using var context = new AlmoxarifadoDBContext();
+            
             var log = new Log
             {
                 CodigoRobo = CodRobo,
@@ -25,8 +31,8 @@ namespace RaspagemMagMer.Operations
                 InformacaoLog = infLog,
                 IdProduto = idProd
             };
-            context.Logs.Add(log);
-            context.SaveChanges();
+            _context.Logs.Add(log);
+            _context.SaveChanges();
         }
     }
 }

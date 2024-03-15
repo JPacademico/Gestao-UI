@@ -111,7 +111,7 @@ namespace AlmoxerifadoInteligente.Migrations
                     b.HasKey("IdLog")
                         .HasName("PK__Logs__6CC851FEC09C9E3D");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", (string)null);
                 });
 
             modelBuilder.Entity("AlmoxerifadoInteligente.Models.Produto", b =>
@@ -150,7 +150,7 @@ namespace AlmoxerifadoInteligente.Migrations
                     b.HasKey("IdProduto")
                         .HasName("PK__Produtos__BA38A6B801B4C2DA");
 
-                    b.ToTable("Produtos");
+                    b.ToTable("Produtos", (string)null);
                 });
 
             modelBuilder.Entity("AlmoxerifadoInteligente.Models.BenchmarkingItem", b =>

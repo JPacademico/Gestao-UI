@@ -1,5 +1,6 @@
 ﻿using AlmoxerifadoInteligente.API.Scraps;
 using AlmoxerifadoInteligente.Models;
+using AlmoxerifadoInteligente.Operations.Register;
 using Newtonsoft.Json;
 using RaspagemMagMer.Scraps;
 using System;
@@ -13,11 +14,23 @@ namespace RaspagemMagMer.Operations
 {
     public class DBCheck
     {
-        
+        private readonly AlmoxarifadoDBContext _context;
+
+        public DBCheck(AlmoxarifadoDBContext context)
+        {
+            _context = context;
+        }
+        private readonly LogRegister _logRegister;
+
+        public DBCheck(LogRegister logRegister)
+        {
+            _logRegister = logRegister;
+        }
         static List<Produto> produtosVerificados = new();
-        public static async void VerificarNovoProduto()
+        public async void VerificarNovoProduto()
 
         {
+            
             string codUsu = LogRegister.CodRobo;
             string url = "https://localhost:7286/api/Produtos";
 
@@ -45,10 +58,11 @@ namespace RaspagemMagMer.Operations
 
                                 produtosVerificados.Add(produto);
 
-                                if (!ProdutoJaRegistrado(produto.IdProduto,codUsu))
+                                if (!ProdutoJaRegistrado(produto.IdProduto,codUsu, _context))
                                 {
-                                    LogRegister.RegistrarLog(DateTime.Now, "ConsultaAPI - Verificar Produto", "Sucesso", produto.IdProduto);
-                                    Benchmarking.CompareValue(produto.Descricao, produto.IdProduto);
+                                    _logRegister.RegistrarLog(DateTime.Now, "ConsultaAPI - Verificar Produto", "Sucesso", produto.IdProduto);
+
+                                   
 
                                     
 
@@ -76,14 +90,11 @@ namespace RaspagemMagMer.Operations
             List<Produto> produtos = JsonConvert.DeserializeObject<List<Produto>>(responseData);
             return produtos;
         }
-        
-        static bool ProdutoJaRegistrado(int idProduto,string codRobo)
+
+        static bool ProdutoJaRegistrado(int idProduto, string codRobo, AlmoxarifadoDBContext context)
         {
-            using (var context = new AlmoxarifadoDBContext())
-            {
-                return context.Logs.Any(log => log.IdProduto == idProduto && log.CodigoRobo == codRobo);
-            }
+            return context.Logs.Any(log => log.IdProduto == idProduto && log.CodigoRobo == codRobo);
         }
-       
+
     }
 }

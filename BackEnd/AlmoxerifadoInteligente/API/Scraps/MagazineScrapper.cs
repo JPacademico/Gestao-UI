@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Threading;
+using AlmoxerifadoInteligente.Models;
+using AlmoxerifadoInteligente.Operations.Register;
 using HtmlAgilityPack;
 using Microsoft.Extensions.Options;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using RaspagemMagMer.Operations;
 
 namespace AlmoxerifadoInteligente.API.Scraps
 {
@@ -14,9 +15,11 @@ namespace AlmoxerifadoInteligente.API.Scraps
         public string Link { get; set; }
         public string Nome { get; set; }
         public string Preco { get; set; }
-        
-        public MagazineScraper()
+
+        private readonly LogRegister _logRegister;
+        public MagazineScraper(LogRegister logRegister)
         {
+            _logRegister = logRegister;
             _chromeOptions = new ChromeOptions();
             _chromeOptions.AddArgument("--headless");
             _chromeOptions.AddArgument("--disable-gpu");
@@ -38,7 +41,7 @@ namespace AlmoxerifadoInteligente.API.Scraps
             {
                 using (IWebDriver driver = InitializeDriver())
                 {
-                    string url = $"https://www.magazineluiza.com.br/busca/{descricaoProduto}";
+                    string url = $"https://www.magazineluiza.com.br/busca/{descricaoProduto.Replace(' ', '+')}";
                     driver.Navigate().GoToUrl(url);
                     Thread.Sleep(5000);
 
@@ -54,7 +57,7 @@ namespace AlmoxerifadoInteligente.API.Scraps
                         Nome = firstProductName;
                         Link = url;
                         
-                        LogRegister.RegistrarLog(DateTime.Now, "WebScraping - Magazine Luiza", "Sucesso - Selenium", idProduto);
+                        _logRegister.RegistrarLog(DateTime.Now, "WebScraping - Magazine Luiza", "Sucesso", idProduto);
                         Console.WriteLine("Preco Magalu: " + firstProductPrice + "\n");
                         Console.WriteLine("Nome Magalu: " + nameElement.Text + "\n");
                     }
@@ -62,7 +65,7 @@ namespace AlmoxerifadoInteligente.API.Scraps
                     {
                         Console.WriteLine("Preço não encontrado.");
 
-                        LogRegister.RegistrarLog(DateTime.Now, "WebScraping - Magazine Luiza", "Preço não encontrado - Selenium", idProduto);
+                        _logRegister.RegistrarLog(DateTime.Now, "WebScraping - Magazine Luiza", "Preço não encontrado", idProduto);
 
                     }
                 }
@@ -71,7 +74,7 @@ namespace AlmoxerifadoInteligente.API.Scraps
             {
                 Console.WriteLine($"Erro ao acessar a página: {ex.Message}");
 
-                LogRegister.RegistrarLog(DateTime.Now, "Web Scraping - Magazine Luiza", $"Erro: {ex.Message}", idProduto);
+                _logRegister.RegistrarLog(DateTime.Now, "Web Scraping - Magazine Luiza", $"Erro: {ex.Message}", idProduto);
             }
         }
 

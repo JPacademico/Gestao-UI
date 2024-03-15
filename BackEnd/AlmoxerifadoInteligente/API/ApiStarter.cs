@@ -5,6 +5,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using AlmoxerifadoInteligente.Models;
+using AlmoxerifadoInteligente.Operations.Register;
+using RaspagemMagMer.Operations;
+using RaspagemMagMer.Scraps;
+using AlmoxerifadoInteligente.API.Scraps;
 
 namespace AlmoxerifadoInteligente.API
 {
@@ -34,6 +38,11 @@ namespace AlmoxerifadoInteligente.API
                            .AllowAnyHeader();
                 });
             });
+            services.AddScoped<BenchRegister>();
+            services.AddScoped<Benchmarking>();
+            services.AddScoped<LogRegister>();
+            services.AddScoped<MercadoLivreScraper>();
+            services.AddScoped<MagazineScraper>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

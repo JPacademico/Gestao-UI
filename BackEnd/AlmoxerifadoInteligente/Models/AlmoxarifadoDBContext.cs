@@ -8,25 +8,23 @@ namespace AlmoxerifadoInteligente.Models
 {
     public partial class AlmoxarifadoDBContext : DbContext
     {
-        public AlmoxarifadoDBContext()
-        {
-        }
+        private readonly IConfiguration _configuration;
 
-        public AlmoxarifadoDBContext(DbContextOptions<AlmoxarifadoDBContext> options)
+        public AlmoxarifadoDBContext(DbContextOptions<AlmoxarifadoDBContext> options, IConfiguration configuration)
             : base(options)
         {
+            _configuration = configuration;
         }
 
-        public virtual DbSet<Log> Logs { get; set; } = null!;
-        public virtual DbSet<Produto> Produtos { get; set; } = null!;
-
+        public virtual DbSet<Log> Logs { get; set; }
+        public virtual DbSet<Produto> Produtos { get; set; }
         public virtual DbSet<BenchmarkingItem> BenchmarkingItems { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=RAFAELMECENAS\\DBPRACTICE;Database=AlmoxarifadoDB;User Id=sa;Password=senha123;");
+                optionsBuilder.UseSqlServer(_configuration.GetConnectionString("conexao"));
             }
         }
 

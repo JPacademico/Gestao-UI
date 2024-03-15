@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using RaspagemMagMer.Operations;
+﻿using RaspagemMagMer.Operations;
 using System;
+using System.Threading.Tasks;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace SuaAplicacao.Controllers
 {
@@ -9,14 +10,19 @@ namespace SuaAplicacao.Controllers
     [ApiController]
     public class BenchmarkingController : ControllerBase
     {
+        private readonly Benchmarking _benchmarking;
+
+        public BenchmarkingController(Benchmarking benchmarking)
+        {
+            _benchmarking = benchmarking;
+        }
         [HttpGet]
         [Route("compare")]
-        public ActionResult<List<object>> ComparePreco(string descricaoProduto, int idProd)
+        public async Task<ActionResult<List<object>>> ComparePreco(string descricaoProduto, int idProd)
         {
             try
             {
-                var resultadoComparacao = Benchmarking.CompareValue(descricaoProduto, idProd).Result;
-
+                var resultadoComparacao = await _benchmarking.CompareValue(descricaoProduto, idProd);
                 return Ok(resultadoComparacao);
             }
             catch (Exception ex)

@@ -5,14 +5,20 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RaspagemMagMer.Operations
+namespace AlmoxerifadoInteligente.Operations.Register
 {
     public class BenchRegister
     {
+        private readonly AlmoxarifadoDBContext _context;
 
-        public static void RegistrarBench(string nomeMer, string nomeMag ,string linkMer, string linkMag,decimal precoMer, decimal precoMag, decimal economia, int idProd)
+        public BenchRegister(AlmoxarifadoDBContext context)
         {
-            using var context = new AlmoxarifadoDBContext();
+            _context = context;
+        }
+
+        public void RegistrarBench(string nomeMer, string nomeMag, string linkMer, string linkMag, decimal precoMer, decimal precoMag, decimal economia, int idProd)
+        {
+            
             var benchmarkitem = new BenchmarkingItem
             {
                 NomeLoja1 = nomeMer,
@@ -24,8 +30,8 @@ namespace RaspagemMagMer.Operations
                 Economia = economia,
                 IdProduto = idProd
             };
-            context.BenchmarkingItem.Add(benchmarkitem);
-            context.SaveChanges();
+            _context.BenchmarkingItem.Add(benchmarkitem);
+            _context.SaveChanges();
         }
     }
 }
