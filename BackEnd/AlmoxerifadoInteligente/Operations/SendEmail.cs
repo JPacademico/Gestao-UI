@@ -67,7 +67,7 @@ namespace RaspagemMagMer.Operations
                            "\n" +
                            $"Magazine Luiza:\n" +
                            $"Nome: {produto.NomeLoja2} \n" +
-                           $"Preço: {produto.PrecoLoja2}\n" +
+                           $"Preço: R$ {produto.PrecoLoja2}\n" +
                            "\n" +
                            $"Resultado:\n"
                            +

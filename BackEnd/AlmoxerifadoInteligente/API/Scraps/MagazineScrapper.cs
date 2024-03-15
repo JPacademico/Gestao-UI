@@ -53,7 +53,7 @@ namespace AlmoxerifadoInteligente.API.Scraps
                                 var nodeNameValue = card.SelectSingleNode(".//h2[@data-testid=\"product-title\"]");
 
                                 Link = url;
-                                Nome = "oi";
+                                Nome = nodeNameValue.InnerText;
                                 Preco = nodePriceValue.InnerText;
                                 Console.WriteLine("Nome Magalu: "+Nome);
                                 Console.WriteLine("Preco Magalu: "+Preco);
