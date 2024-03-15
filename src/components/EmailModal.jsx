@@ -5,52 +5,68 @@ import Close from "../assets/close.svg";
 import "./Edit.css";
 import { useCallback, useState } from "react";
 import axios from "axios";
-import api from "../lib/api";
 
+async function changeEmailStatus(id) {
+  try {
+    await axios.patch(`https://localhost:7286/api/Produtos/${id}`, {
+      emailStatus: false,
+    });
+  } catch (error) {
+    console.error("Erro ao alterar o status do produto:", error);
+  }
+
+}
 
 function EmailModal({ toggleModalStatus, getProducts }) {
   const [email, setEmail] = useState();
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
 
   const [searchParams, setSearchParams] = useSearchParams();
 
   const id = searchParams.get("id");
 
   const sendEmail = useCallback(async () => {
-    console.log(email);
-    let response = await axios.post(`https://localhost:7286/api/Email/enviar?destinatario=${email}&idProduto=${id}`)
+    try {
 
-    console.log(response.data)
-    
-  });
+      await axios.post(`https://localhost:7286/api/Email/enviar?destinatario=${email}&idProduto=${id}`);
+  
+      console.log("Email enviado com sucesso!");
+  
+      setLoading(false);
+      toggleModalStatus();
+  
+      setSearchParams((params) => {
+        params.delete("id");
+        return params;
+      });
+  
+      setEmail('');
+      await changeEmailStatus(id);
+      getProducts();
 
-  const changeStatus = useCallback(async (id) => {
+    } catch (error) {
+      console.error("Erro ao enviar o email:", error);
+    }
+  }, [email, id, toggleModalStatus, setSearchParams]);
 
+  const changeStatus = useCallback(async () => {
     await getProducts();
 
-    setSearchParams((state) => {
-      if (id) {
-        state.delete("id");
-      }
-      return state;
+    setSearchParams((params) => {
+      params.delete("id");
+      return params;
     });
-  });
+  }, [getProducts, setSearchParams]);
 
-  const changeEmail =  (e) => {
-    console.log(e.target.value)
-    setEmail(e.target.value)
-  }
+  const changeEmail = (e) => {
+    setEmail(e.target.value);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    setLoading(true)
-    setTimeout(() => {
-      toggleModalStatus();
-      setLoading(false)
-    }, 2000);
-    console.log("Email enviado");
-    
+
+    setLoading(true);
+    sendEmail();
   };
 
   return (
@@ -58,7 +74,7 @@ function EmailModal({ toggleModalStatus, getProducts }) {
       <Dialog.Overlay className="DialogOverlay" />
       <Dialog.Content className="DialogContent">
         <Dialog.Close asChild>
-          <button className="IconButton" aria-label="Close">
+          <button className="IconButton" onClick={changeStatus} aria-label="Close">
             <img className="close" src={Close} alt="" />
           </button>
         </Dialog.Close>
@@ -68,7 +84,7 @@ function EmailModal({ toggleModalStatus, getProducts }) {
           melhor oferta!
         </Dialog.Description>
         <form onSubmit={handleSubmit}>
-          <label className="Label" htmlFor="name">
+          <label className="Label" htmlFor="email">
             Email
           </label>
           <input
@@ -76,7 +92,7 @@ function EmailModal({ toggleModalStatus, getProducts }) {
             required
             className="Input"
             id="email"
-            onChange={(e) => changeEmail(e)}
+            onChange={changeEmail}
           />
 
           <div
@@ -86,20 +102,19 @@ function EmailModal({ toggleModalStatus, getProducts }) {
               justifyContent: "flex-end",
             }}
           >
-            {!loading && <button type="submit" className="Button green" onClick={() => sendEmail()}>
-              Enviar
-            </button>}
+            {!loading && (
+              <button type="submit" className="Button green">
+                Enviar
+              </button>
+            )}
 
-            {loading && <button disabled className="loadingBtn" >
-              Enviando
-            </button>}
-
-            
+            {loading && <button disabled className="loadingBtn">Enviando</button>}
           </div>
         </form>
       </Dialog.Content>
     </Dialog.Portal>
   );
 }
+
 
 export default EmailModal;

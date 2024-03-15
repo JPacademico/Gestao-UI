@@ -4,6 +4,7 @@ using AlmoxerifadoInteligente.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AlmoxerifadoInteligente.Migrations
 {
     [DbContext(typeof(AlmoxarifadoDBContext))]
-    partial class AlmoxarifadoDBContextModelSnapshot : ModelSnapshot
+    [Migration("20240314220945_14-03v2")]
+    partial class _1403v2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -32,6 +34,9 @@ namespace AlmoxerifadoInteligente.Migrations
 
                     b.Property<decimal>("Economia")
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Email")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("IdProduto")
                         .HasColumnType("int");
@@ -128,9 +133,6 @@ namespace AlmoxerifadoInteligente.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(255)")
                         .HasColumnName("descricao");
-
-                    b.Property<bool>("EmailStatus")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("EstoqueAtual")
                         .HasColumnType("int")

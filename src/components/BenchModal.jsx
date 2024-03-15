@@ -1,47 +1,59 @@
-import { Link } from "react-router-dom";
+import { useCallback, useEffect, useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import Close from "../assets/close.svg";
 import { useSearchParams } from "react-router-dom";
-import { useCallback } from "react";
-
-import "./Edit.css";
-import { useState } from "react";
 import axios from "axios";
 
-function BenchModal({getInfo}) {
+import "./Edit.css";
+
+function BenchModal({ getInfo }) {
   const [searchParams, setSearchParams] = useSearchParams();
-
   const id = searchParams.get("id");
+  const [mensagem, setMensagem] = useState();
   
-  const changeStatus = useCallback(async (id) => {
+  useEffect(() => {
+    
+    async function fetchInfo(){
+      if (id) {
+        try {
+          const info = await getInfo(id);
+          setMensagem(info); 
+        } catch (error) {
+          console.error("Erro ao obter informações:", error);
+          setMensagem(null); 
+        }
+      }
+    };
 
-    await getInfo();
+    fetchInfo(); 
 
+    return () => {
+      setMensagem(null);
+    };
+  }, [getInfo]);
+
+  const changeStatus = useCallback(() => {
     setSearchParams((state) => {
       if (id) {
         state.delete("id");
       }
       return state;
     });
-  });
-  
-  getInfo(id)
+  }, [id, setSearchParams]);
 
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="DialogOverlay" />
       <Dialog.Content className="DialogContent">
         <Dialog.Close asChild>
-          <button className="IconButton" aria-label="Close" onClick={()=>changeStatus}>
+          <button className="IconButton" aria-label="Close" onClick={changeStatus}>
             <img className="close" src={Close} alt="" />
           </button>
         </Dialog.Close>
         <Dialog.Title className="DialogTitle">Resultado do Benchmarking</Dialog.Title>
         <Dialog.Description className="DialogDescription">
-        
+         {mensagem&&(mensagem)}
         </Dialog.Description>
-        
-        
       </Dialog.Content>
     </Dialog.Portal>
   );

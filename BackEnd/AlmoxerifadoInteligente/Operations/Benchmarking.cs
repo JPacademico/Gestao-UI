@@ -26,7 +26,6 @@ namespace RaspagemMagMer.Operations
                 MagazineScraper magazineLuiza = new();
                 magazineLuiza.ObterData(descricaoProduto,idProduto);
 
-
                 decimal mercadoPreco = Convert.ToDecimal(mercadoLivre.Preco.Trim(charRemove));
                 decimal magazinePreco = Convert.ToDecimal(magazineLuiza.Preco.Trim(charRemove));
 

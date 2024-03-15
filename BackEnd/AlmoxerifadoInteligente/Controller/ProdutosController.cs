@@ -147,6 +147,10 @@ namespace AlmoxerifadoInteligente.Controller
             {
                 produto.Status = produtoPatch.Status;
             }
+            if (produtoPatch.EmailStatus != null)
+            {
+                produto.EmailStatus = produtoPatch.EmailStatus;
+            }
 
             _context.Entry(produto).State = EntityState.Modified;
             var updatedProduto = await _context.SaveChangesAsync();

@@ -21,7 +21,6 @@ namespace RaspagemMagMer.Operations
                 PrecoLoja2 = precoMag,
                 LinkLoja1 = linkMer,
                 LinkLoja2 = linkMag,
-                Email = "aleatorio",
                 Economia = economia,
                 IdProduto = idProd
             };

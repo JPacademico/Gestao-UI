@@ -31,24 +31,48 @@ function Gestao() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [benchStatus, setBenchStatus] = useState(null)
 
-
-  async function doBench(idproduto,nome) {
+  async function changeEmailStatus(id) {
     try {
-      let response = await axios.get(`https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`);
-
-      if (response.data !== null) {
-        changePrice(response.data[3], idproduto)
-        changeStatus(true, idproduto)
-      } else {
-        changeStatus(false, idproduto)
-      }
+      await axios.patch(`https://localhost:7286/api/Produtos/${id}`, {
+        emailStatus: true,
+      });
     } catch (error) {
-      changeStatus(false, idproduto)
+      console.error("Erro ao alterar o status do produto:", error);
     }
-    
+  
   }
 
-  async function getInfo(idProduto) {
+  async function doBench(idproduto, nome) {
+    try {
+      let response = await axios.get(`https://localhost:7286/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`);
+      console.log(response.data)
+      if (response.data !== null) {
+        await Promise.all([
+          await changeStatusPrice(true, response.data[3] , idproduto),
+          await changeEmailStatus(idproduto),
+        ]);
+      } else {
+        await changeStatus(false, 0 , idproduto);
+      }
+      getData();
+    } catch (error) {
+      console.error("Erro ao executar o benchmarking:", error);
+    }
+  }
+  
+  async function changeStatusPrice(status,price ,idProduto) {
+    try {
+      let response = await axios.patch(`https://localhost:7286/api/Produtos/${idProduto}`, {
+        preco: price,
+        status: status
+      });
+      console.log("CHANGE: " + response.data);
+    } catch (error) {
+      console.error("Erro ao alterar o status do produto:", error);
+    }
+  }
+
+  async function getBench(idProduto) {
     let response = await axios.get(`https://localhost:7286/api/BenchmarkingItems/${idProduto}`)
     let mensagem = "uhu"
 
@@ -59,30 +83,14 @@ function Gestao() {
     let linkMer = response.data.linkLoja1;
 
     if (precoMag > precoMer) {
-       mensagem = `O preço do produto está melhor na Mercado Livre, pois está R$ ${economia} mais barato.\n Link para produto no Mercado Livre: ${linkMer}`
+      mensagem = `O preço do produto está melhor na Mercado Livre, pois está R$ ${economia} mais barato.\n Link para produto no Mercado Livre: ${linkMer}`
     } else if (precoMer > precoMag) {
-        mensagem = `O preço do produto está melhor na Magazine Luiza, pois está R$ ${economia} mais barato.\n Link para produto no Magazine Luiza: ${linkMag}`
+      mensagem = `O preço do produto está melhor na Magazine Luiza, pois está R$ ${economia} mais barato.\n Link para produto no Magazine Luiza: ${linkMag}`
     } else {
       mensagem = "Os valores são equivalentes."
     }
     console.log(mensagem);
-  }
-
-  async function changePrice(price, idProduto){
-    let response = await axios.patch(`https://localhost:7286/api/Produtos/${idProduto}`, {
-    preco: price,
-  });
-
-    getData();
-  }
-
-  async function changeStatus(status, idProduto){
-    let response = await axios.patch(`https://localhost:7286/api/Produtos/${idProduto}`, {
-    status: status,
-    
-  });
-    getData();
-
+    return mensagem;
   }
 
   const toggleModal = () => {
@@ -96,8 +104,6 @@ function Gestao() {
   const toggleInfoModal = () => {
     setInfoModalOpen(infoModalIsOpen === true ? false : true);
   };
-
-
 
   const setURLId = (id) => {
     setSearchParams((state) => {
@@ -118,9 +124,8 @@ function Gestao() {
   const getData = useCallback(async () => {
     const response = await axios.get("https://localhost:7286/api/Produtos");
     setList(response.data);
-    console.log(list);
   }, [list]);
-
+  
   const createNewProduct = useCallback(
     async ({ name, price, estoque, estoqueMin }) => {
       await axios.post("https://localhost:7286/api/Produtos", {
@@ -133,7 +138,6 @@ function Gestao() {
       getData();
     }
   );
-
 
   useEffect(() => {
     getData();
@@ -181,7 +185,7 @@ function Gestao() {
 
           <Dialog.Root open={infoModalIsOpen} onOpenChange={setInfoModalOpen}>
             <BenchModal
-              getInfo={getInfo}
+              getInfo={getBench}
               toggleModalStatus={toggleInfoModal}
               getProducts={getData}
             ></BenchModal>
@@ -202,9 +206,9 @@ function Gestao() {
                         <button>
                           {product.status == null ? (
                             <img src={Run} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
-                          ) : product.status == true ? (
+                          ) : product.status === true ? (
                             <img src={lampadaAzul} onClick={() => {toggleInfoModal(); setURLId(product.idProduto);}} alt="Iniciar Benchmarking" />
-                          ) : product.status == false &&(
+                          ) : (
                             <img src={lampadaVermelha} onClick={() => doBench(product.idProduto, product.descricao)} alt="Iniciar Benchmarking" />
                           )
                           }
@@ -217,11 +221,11 @@ function Gestao() {
                             toggleEmailModal();
                             setURLId(product.idProduto);
                           }}
-                          disabled={product.status !== true}
+                          disabled={product.status !== true || product.emailStatus !== true}
                           className="sendButton"
 
                         >
-                          {product.status === true ? (
+                          {product.status === true && product.emailStatus === true? (
                             <img src={Message} alt="Enviar Email" />
                           ) : (
                             <img src={DisabledMessage} alt="Enviar Email" />

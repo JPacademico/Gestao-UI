@@ -26,7 +26,7 @@ namespace AlmoxerifadoInteligente.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=PC03LAB2539\\SENAI;Database=AlmoxarifadoDB;User Id=sa;Password=senai.123;");
+                optionsBuilder.UseSqlServer("Server=RAFAELMECENAS\\DBPRACTICE;Database=AlmoxarifadoDB;User Id=sa;Password=senha123;");
             }
         }
 
@@ -41,10 +41,6 @@ namespace AlmoxerifadoInteligente.Models
                 entity.Property(e => e.PrecoLoja1).HasColumnType("decimal(18, 2)");
 
                 entity.Property(e => e.PrecoLoja2).HasColumnType("decimal(18, 2)");
-
-                entity.Property(e => e.Email)
-                     .HasColumnType("nvarchar(max)")
-                     .IsRequired(false); 
 
                
             });
