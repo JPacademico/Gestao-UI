@@ -1,6 +1,7 @@
-﻿using AlmoxerifadoInteligente.Models;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using RaspagemMagMer.Operations;
+using System;
+using System.Collections.Generic;
 
 namespace SuaAplicacao.Controllers
 {
@@ -12,11 +13,16 @@ namespace SuaAplicacao.Controllers
         [Route("compare")]
         public ActionResult<List<object>> ComparePreco(string descricaoProduto, int idProd)
         {
-            // Chama a função de comparação de preços da classe Benchmarking
-            List<object> resultadoComparacao = Benchmarking.CompareValue(descricaoProduto,idProd);
+            try
+            {
+                var resultadoComparacao = Benchmarking.CompareValue(descricaoProduto, idProd).Result;
 
-            // Retorna o resultado da comparação
-            return resultadoComparacao;
+                return Ok(resultadoComparacao);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Erro ao comparar preços: {ex.Message}");
+            }
         }
     }
 }
