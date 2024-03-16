@@ -62,7 +62,7 @@ namespace RaspagemMagMer.Operations
 
                     try
                     {
-                        var log = new InsertLogDTO(1806, "LRJevs", descricaoProduto, Convert.ToDouble(mercadoPreco), Convert.ToDouble(magazinePreco), Convert.ToDouble(result));
+                        var log = new InsertLogDTO(0006, "LRJevs", descricaoProduto, Convert.ToDouble(mercadoPreco), Convert.ToDouble(magazinePreco), Convert.ToDouble(result));
                         await log.InsertAsync();
                         _logRegister.RegistrarLog(DateTime.Now, "DTO", "Sucesso", idProduto);
                         Console.WriteLine("Informações enviadas com sucesso.");
