@@ -1,26 +1,25 @@
 import { useCallback, useEffect, useState } from "react";
-import Header from "../components/Header";
+import Header from "../../components/Header";
 import * as Dialog from "@radix-ui/react-dialog";
 
-import Xicon from "../assets/xis.svg";
-import Edit from "../assets/edit.svg";
-import Message from "../assets/message.svg";
-import DisabledMessage from "../assets/disabledMessage.svg";
-import lampadaAzul from "../assets/bluelamp.svg";
-import lampadaVermelha from "../assets/redlamp.svg";
+import Xicon from "../../assets/xis.svg";
+import Edit from "../../assets/edit.svg";
+import Message from "../../assets/message.svg";
+import DisabledMessage from "../../assets/disabledMessage.svg";
+import lampadaAzul from "../../assets/bluelamp.svg";
+import lampadaVermelha from "../../assets/redlamp.svg";
 
-import Run from "../assets/run.svg";
-import Modal from "../components/EditProductModal";
+import Run from "../../assets/run.svg";
+import Modal from "../../components/EditProductModal";
 
 import "./Gestao.css";
-import AddModal from "../components/CreateProductModal";
-import api from "../lib/api";
-import { price } from "../utils/priceFormater";
+import AddModal from "../../components/CreateProductModal";
+import { price } from "../../utils/priceFormater";
 import { useSearchParams } from "react-router-dom";
-import EmailModal from "../components/EmailModal";
+import EmailModal from "../../components/EmailModal";
 import axios from "axios";
-import BenchModal from "../components/BenchModal";
-import Delete from "../components/DeleteModal";
+import BenchModal from "../../components/BenchModal";
+import Delete from "../../components/DeleteModal";
 
 function Gestao() {
   const [list, setList] = useState();

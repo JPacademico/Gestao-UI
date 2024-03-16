@@ -1,0 +1,122 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+.box{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.container-login {
+    display: flex;
+    flex-direction: row;
+    min-height: 100vh;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    border-radius: 2rem;
+}
+
+.boxImagem {
+    display: flex;
+    width: 35rem;
+}
+
+.imagemLogin {
+    width: 100%;
+    border-bottom-left-radius: 2rem;
+    border-top-left-radius: 2rem;
+}
+.title{
+    padding-bottom: 2rem;
+}
+.boxLogin {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6rem;
+    border: 2px solid #38B6FF;
+    width: 20rem;
+    height: 37.7rem;
+    border-top-right-radius: 2rem;
+    border-bottom-right-radius: 2rem;
+}
+
+.caixaLogin {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.caixaLogin div{
+    display: flex;
+    gap: .5rem;
+    border: 1px solid black;
+    border-radius: .75rem;
+    
+}
+
+.caixaLogin img{
+    display: flex;
+    width: 2rem;
+    padding: 0.5rem;
+}
+
+.caixaLogin input {
+    border-radius: .75rem;
+    border-width: thin;
+    outline: none;
+    padding-left: .5rem;
+    background-color: white;
+    color: black;
+    
+}
+
+.botoes {
+    display: flex;
+    height: 6rem;
+    width: 10rem;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    gap: .5rem;
+}
+
+.btn {
+    display: flex;
+    width: 9rem;
+    height: 2.5rem;
+    border-radius: .5rem;
+    background-color: #38B6FF;
+    outline: none;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: white;
+}
+
+.btn:hover {
+    background-color: white;
+    border: 1px solid #38B6FF;
+    color: #38B6FF;
+}
+
+.btnCadastrar {
+    background-color: white;
+    color: black;
+    font-size: small;
+    height: 1.5rem;
+    border: none;
+}
+
+.btnCadastrar:hover {
+    text-decoration: underline;
+    border: none;
+    color: blueviolet;
+}

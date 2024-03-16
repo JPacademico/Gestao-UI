@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
-import Gestao from './pages/Gestao'
+import Gestao from './pages/Gestao/Gestao'
+import Login from './pages/Login/Login'
 import './App.css'
 
 function App() {
@@ -10,8 +11,8 @@ function App() {
     <>
       <div className='main'>
         <Routes>
-          <Route path={"/"} element={<Gestao />} />
-          
+          <Route path={"/gestao"} element={<Gestao />} />
+          <Route path={"/"} element={<Login/>}></Route>
         </Routes>
       </div>
     </>
