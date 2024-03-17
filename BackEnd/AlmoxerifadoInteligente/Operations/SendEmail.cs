@@ -50,13 +50,15 @@ namespace RaspagemMagMer.Operations
                 if (produto.PrecoLoja2 > produto.PrecoLoja1)
                 {
                     responseBench = $"O preço do produto está melhor no Mercado livre, pois está R$ {produto.Economia} mais barato\n" +
-                       $"Link para produto Mer: {produto.LinkLoja1}";
+                       $"Economia: Link para produto Mercado Livre: {produto.LinkLoja1}\n"+
+                       $"Link para produto Magazine Luiza: {produto.LinkLoja2} \n";
                     Console.WriteLine(responseBench);
                 }
                 else
                 {
                     responseBench = $"O preço do produto está melhor na Magazine Luiza, pois está R$ {produto.Economia} mais barato\n" +
-                       $"Link para produto Mag: {produto.LinkLoja2}";
+                       $"Economia: Link para produto Magazine Luiza: {produto.LinkLoja2}\n"+
+                       $"Link para produto Mercado Livre: {produto.LinkLoja1} \n";
                     Console.WriteLine(responseBench);
                 }
                 MailMessage mensagem = new(remetente, destinatario)
