@@ -61,11 +61,6 @@ namespace RaspagemMagMer.Operations
                                 if (!ProdutoJaRegistrado(produto.IdProduto,codUsu, _context))
                                 {
                                     _logRegister.RegistrarLog(DateTime.Now, "ConsultaAPI - Verificar Produto", "Sucesso", produto.IdProduto);
-
-                                   
-
-                                    
-
                                 }
                             }
                         }

@@ -109,8 +109,9 @@ function Gestao() {
           mensagem = () => {return(
             <>
               <div className="message-box">
-                <h4>O preço do produto está melhor no Mercado Livre, pois está <strong>R$ {economia}</strong> mais barato.</h4>
-                <p> Link para produto no Mercado Livre: {linkMer}</p>
+                <h4 className="message-title">O preço do produto está melhor no Mercado Livre, pois está <strong>R$ {economia}</strong> mais barato.</h4>
+                <span className="message-link"> <strong>Economia:</strong> Link para produto no Mercado Livre: <a href={linkMer}>Clique Aqui</a></span>
+                <span className="message-link"> Link para produto no Magazine Luiza: <a href={linkMag}>Clique Aqui</a></span>
               </div>
             </>
           )}
@@ -118,8 +119,9 @@ function Gestao() {
           mensagem = () => {return(
             <>
               <div className="message-box">
-                <h4>O preço do produto está melhor na Magazine Luiza, pois está <strong>R$ {economia}</strong> mais barato.</h4>
-                <p> Link para produto no Magazine Luiza: {linkMag}</p>
+                <h4 className="message-title">O preço do produto está melhor na Magazine Luiza, pois está <strong>R$ {economia}</strong> mais barato.</h4>
+                <span className="message-link"> <strong>Economia:</strong> Link para produto no Magazine Luiza: <a href={linkMag}>Clique Aqui</a></span>
+                <span className="message-link"> Link para produto no Mercado Livre: <a href={linkMer}>Clique Aqui</a></span>
               </div>
             </>
           )}
@@ -156,7 +158,6 @@ function Gestao() {
   const toggleDeleteModal = () => {
     setDeleteModalOpen(!deleteModalIsOpen);
   };
-
 
   const handleOnClickEdit = (product) => {
     setURLId(product.idProduto);

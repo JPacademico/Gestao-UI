@@ -15,9 +15,9 @@ namespace AlmoxerifadoInteligente.Operations.Register
         {
             _context = context;
         }
-        public static string CodRobo { get; set; } = "1806";
+        public static string CodRobo { get; set; } = "0006";
 
-        public static string UsuRob { get; set; } = "rafaelMecenas";
+        public static string UsuRob { get; set; } = "LRJevs";
 
         public void RegistrarLog(DateTime dateLog, string processo, string infLog, int idProd)
         {

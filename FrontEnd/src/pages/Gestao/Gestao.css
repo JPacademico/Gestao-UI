@@ -28,13 +28,14 @@
     margin-right: auto;
     margin-left: 46px;
     display: flex;
+    flex-direction: column;
     justify-content: center;
-    align-items: center;
+    text-align: center;
     
 }
 
 table{
-    margin-top: 30px;
+    margin-top: 15px;
     width: 100%;
     background: #b4acac2c;
     margin-bottom: 16px;
@@ -48,11 +49,13 @@ table, th, td {
 
 
 td{
-    
-    border-bottom: none;
+    border-bottom: 0.5px solid lightgray;
     border-top: none;
+    height: 2rem;
     padding: 10px;
     text-align: center;
+    width: fit-content;
+    min-width: 5rem;
 }
 
 
@@ -67,15 +70,16 @@ thead tr th:first-child{
 
 thead tr th:last-child{
     width: 180px;
- }
+}
 
 tbody tr td:nth-child(2){
     text-align: left;
- }
+}
 
 .icons-box{
     display: flex;
-    gap: 4px;
+    width: fit-content;
+    gap: 0.35rem;
 }
 
 button{

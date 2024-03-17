@@ -1,5 +1,6 @@
 ﻿
 using AlmoxerifadoInteligente.Models;
+using AlmoxerifadoInteligente.Operations.Register;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,10 +16,12 @@ namespace RaspagemMagMer.Operations
     public class SendEmail
     {
         private readonly AlmoxarifadoDBContext _dbContext;
+        private readonly LogRegister _logRegister;
 
-        public SendEmail(AlmoxarifadoDBContext dbContext)
+        public SendEmail(AlmoxarifadoDBContext dbContext, LogRegister logRegister)
         {
             _dbContext = dbContext;
+            _logRegister = logRegister;
         }
 
         public bool EnviarEmail(string destinatario, int idProduto)
@@ -81,11 +84,13 @@ namespace RaspagemMagMer.Operations
                 try
                 {
                     client.Send(mensagem);
+                    _logRegister.RegistrarLog(DateTime.Now, "SendEmail", "Sucesso", idProduto);
                     return true;
 
                 }
                 catch (Exception ex)
                 {
+                    _logRegister.RegistrarLog(DateTime.Now, "SendEmail", "Erro: "+ex.Message, idProduto);
                     Console.WriteLine("Erro no Email: " + ex.Message);
                     return false;
                 }

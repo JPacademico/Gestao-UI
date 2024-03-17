@@ -64,7 +64,7 @@ namespace AlmoxerifadoInteligente.API.Scraps
                         }
 
                     }
-
+                    _logRegister.RegistrarLog(DateTime.Now, "WebScraping - Magazine Luiza", "Sucesso", idProduto);
 
                 }
 
