@@ -83,3 +83,15 @@ button{
     cursor: pointer;
 }
 
+.message-box{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    
+}
+
+strong{
+    color: rgb(0, 167, 0);
+}
+
