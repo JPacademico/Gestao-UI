@@ -20,6 +20,9 @@ import EmailModal from "../../components/EmailModal";
 import axios from "axios";
 import BenchModal from "../../components/BenchModal";
 import Delete from "../../components/DeleteModal";
+import { Bounce, ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function Gestao() {
   const [list, setList] = useState();
@@ -41,30 +44,37 @@ function Gestao() {
 
   async function doBench(idproduto, nome) {
     try {
-      let response = await axios.get(
-        `https://localhost:8020/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`
-      );
-      console.log("Tamanho: "+response.data.length);
+      const response = await toast.promise(
+        axios.get(`https://localhost:8020/api/Benchmarking/compare?descricaoProduto=${nome}&idProd=${idproduto}`),
+        {
+          pending: 'Benchmarking em andamento...',
+          success: 'Benchmarking concluído com sucesso!',
+          error: 'Erro ao executar benchmarking 😞'
+        }
+      )
       if (response.data !== null && response.data.length > 0) {
         await Promise.all([
           await changeStatusPrice(true, response.data[3], idproduto),
           await changeEmailStatus(true,idproduto),
-          console.log(response.data)
+          
         ]);
       } else if(response.data=""){
-        console.log(ola)
+        
       }
       
       else {
         await changeEmailStatus(false,idproduto),
         await changeStatusPrice(false, 0, idproduto);
+        
       }
-      getData();
+      
     } catch (error) {
       console.error("Erro ao executar o benchmarking:", error);
       await changeStatusPrice(false, 0, idproduto);
-      await changeEmailStatus(false,idproduto)
+      await changeEmailStatus(false,idproduto);
+      
     }
+    getData();
   }
 
   async function changeStatusPrice(status, price, idProduto) {
@@ -96,11 +106,31 @@ function Gestao() {
         let linkMer = response.data.linkLoja1;
   
         if (precoMag > precoMer) {
-          mensagem = `O preço do produto está melhor na Mercado Livre, pois está R$ ${economia} mais barato.\n Link para produto no Mercado Livre: ${linkMer}`;
+          mensagem = () => {return(
+            <>
+              <div className="message-box">
+                <h4>O preço do produto está melhor no Mercado Livre, pois está <strong>R$ {economia}</strong> mais barato.</h4>
+                <p> Link para produto no Mercado Livre: {linkMer}</p>
+              </div>
+            </>
+          )}
         } else if (precoMer > precoMag) {
-          mensagem = `O preço do produto está melhor na Magazine Luiza, pois está R$ ${economia} mais barato.\n Link para produto no Magazine Luiza: ${linkMag}`;
+          mensagem = () => {return(
+            <>
+              <div className="message-box">
+                <h4>O preço do produto está melhor na Magazine Luiza, pois está <strong>R$ {economia}</strong> mais barato.</h4>
+                <p> Link para produto no Magazine Luiza: {linkMag}</p>
+              </div>
+            </>
+          )}
         } else {
-          mensagem = "Os valores são equivalentes.";
+          mensagem = () => {return(
+            <>
+              <div className="message-box">
+                <h4>Valores Equivalentes</h4>
+              </div>
+            </>
+          )}
         }
         return mensagem;
       }
@@ -167,6 +197,9 @@ function Gestao() {
     getData();
   }, []);
 
+
+
+
   return (
     <>
       <Header />
@@ -192,6 +225,8 @@ function Gestao() {
               <th>Opções</th>
             </tr>
           </thead>
+          
+
           {
 
               modalIsOpen &&
@@ -241,7 +276,7 @@ function Gestao() {
                           {product.status == null ? (
                             <img
                               src={Run}
-                              onClick={() =>
+                              onClick={() => 
                                 doBench(product.idProduto, product.descricao)
                               }
                               alt="Iniciar Benchmarking"
@@ -266,6 +301,8 @@ function Gestao() {
                             />
                           )}
                         </button>
+
+                        
 
                         <button
                           onClick={() => {
@@ -315,6 +352,20 @@ function Gestao() {
           </tbody>
         </table>
       </div>
+      <ToastContainer
+        position="top-right"
+        autoClose={4000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+        transition={Bounce}
+      />
+
     </>
   );
 }

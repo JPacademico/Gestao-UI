@@ -76,3 +76,7 @@ input {
     border-radius: 5px;
     font-weight: bold;
 }
+
+.DialogDescription{
+    min-width: 20rem;
+}
