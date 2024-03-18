@@ -58,13 +58,13 @@ namespace AlmoxerifadoInteligente.API.Scraps
                                 Console.WriteLine("Nome Magalu: "+Nome);
                                 Console.WriteLine("Preco Magalu: "+Preco);
                                 Console.WriteLine("Link Magalu: " + Link);
+                                _logRegister.RegistrarLog(DateTime.Now, "WebScraping - Magazine Luiza", "Sucesso", idProduto);
                                 return;
                             }
                             
                         }
 
                     }
-                    _logRegister.RegistrarLog(DateTime.Now, "WebScraping - Magazine Luiza", "Sucesso", idProduto);
 
                 }
 

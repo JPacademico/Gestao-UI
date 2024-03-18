@@ -14,7 +14,7 @@ export default function Logs() {
 
   async function readLogs() {
     try {
-      const response = await axios.get("https://localhost:8020/api/Logs");
+      const response = await axios.get("http://3.145.53.73:8020/api/Logs");
       setLog(response.data);
       setFilteredLog(response.data);
     } catch (error) {

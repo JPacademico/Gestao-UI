@@ -8,7 +8,7 @@ import axios from "axios";
 
 async function changeEmailStatus(id) {
   try {
-    await axios.patch(`https://localhost:8020/api/Produtos/${id}`, {
+    await axios.patch(`http://3.145.53.73:8020/api/Produtos/${id}`, {
       emailStatus: false,
     });
   } catch (error) {
@@ -28,7 +28,7 @@ function EmailModal({ toggleModalStatus, getProducts }) {
   const sendEmail = useCallback(async () => {
     try {
 
-      await axios.post(`https://localhost:8020/api/Email/enviar?destinatario=${email}&idProduto=${id}`);
+      await axios.post(`http://3.145.53.73:8020/api/Email/enviar?destinatario=${email}&idProduto=${id}`);
   
       console.log("Email enviado com sucesso!");
   

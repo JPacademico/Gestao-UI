@@ -17,12 +17,12 @@ function Edit({ toggleModalStatus, getProducts}) {
   const id = searchParams.get('id')
   
   const getData = useCallback(async () => {
-    const response = await axios.get(`https://localhost:8020/api/Produtos/${id}`);
+    const response = await axios.get(`http://3.145.53.73:8020/api/Produtos/${id}`);
     setStatus(response.data.status);
   }, [id]);
 
   const editProduct = async (id,{name=null,estoque,estoqueMin}) => {
-    const response = await axios.patch(`https://localhost:8020/api/Produtos/${id}`,{
+    const response = await axios.patch(`http://3.145.53.73:8020/api/Produtos/${id}`,{
       
       descricao:name,
       estoqueAtual:estoque,

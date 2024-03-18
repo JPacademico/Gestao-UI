@@ -16,7 +16,7 @@ function Delete({toggleModalStatus, getProducts}) {
   
 
 const handleDeleteProduct = useCallback(async () => {
-    await axios.delete(`https://localhost:8020/api/Produtos/${id}`);
+    await axios.delete(`http://3.145.53.73:8020/api/Produtos/${id}`);
     console.log(id);
     getProducts();
   }, [id]);

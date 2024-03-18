@@ -32,7 +32,7 @@ namespace RaspagemMagMer.Operations
         {
             
             string codUsu = LogRegister.CodRobo;
-            string url = "https://localhost:8020/api/Produtos";
+            string url = "http://3.145.53.73:8020/api/Produtos";
 
             try
             {
